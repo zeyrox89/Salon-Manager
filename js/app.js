@@ -56,16 +56,63 @@ function renderPage(page) {
   else if (page === 'statistiche') renderStatistiche();
 }
 
+// ----------- CONFIG CHECK -----------
+function isConfigured() {
+  return typeof SUPABASE_URL !== 'undefined'
+    && SUPABASE_URL !== 'https://TUO-PROGETTO.supabase.co'
+    && typeof SUPABASE_ANON_KEY !== 'undefined'
+    && SUPABASE_ANON_KEY !== 'LA-TUA-ANON-KEY';
+}
+
+function showConfigError(el) {
+  el.innerHTML = `
+    <div style="max-width:520px;margin:4rem auto;padding:2rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);">
+      <div style="font-size:32px;margin-bottom:1rem;">⚙️</div>
+      <h2 style="font-size:18px;font-weight:600;margin-bottom:0.75rem;">Configura Supabase</h2>
+      <p style="color:var(--text-muted);font-size:14px;line-height:1.6;margin-bottom:1.25rem;">
+        Per far funzionare l'app devi inserire le tue credenziali Supabase nel file <code style="background:var(--bg);padding:2px 6px;border-radius:4px;">js/config.js</code>.
+      </p>
+      <ol style="color:var(--text-muted);font-size:14px;line-height:2;padding-left:1.25rem;">
+        <li>Vai su <a href="https://supabase.com" target="_blank" style="color:var(--accent)">supabase.com</a> e crea un progetto</li>
+        <li>Esegui il file <strong>supabase_schema.sql</strong> nell'editor SQL</li>
+        <li>Vai su <em>Project Settings → API</em></li>
+        <li>Copia <strong>Project URL</strong> e <strong>anon public key</strong></li>
+        <li>Incollali in <code style="background:var(--bg);padding:2px 6px;border-radius:4px;">js/config.js</code></li>
+        <li>Ricarica questa pagina</li>
+      </ol>
+    </div>`;
+}
+
+function showFetchError(el, errMsg) {
+  el.innerHTML = `
+    <div style="max-width:520px;margin:4rem auto;padding:2rem;background:var(--surface);border:1px solid #f0a0a0;border-radius:var(--radius-lg);">
+      <div style="font-size:32px;margin-bottom:1rem;">❌</div>
+      <h2 style="font-size:18px;font-weight:600;margin-bottom:0.75rem;">Errore di connessione</h2>
+      <p style="color:var(--text-muted);font-size:14px;line-height:1.6;margin-bottom:0.75rem;">
+        L'app non riesce a connettersi al database. Dettaglio errore:
+      </p>
+      <code style="display:block;background:var(--bg);padding:0.75rem;border-radius:6px;font-size:12px;color:var(--danger);word-break:break-all;">${errMsg}</code>
+      <p style="color:var(--text-muted);font-size:13px;margin-top:1rem;">
+        Controlla che le credenziali in <strong>js/config.js</strong> siano corrette e che il file <strong>supabase_schema.sql</strong> sia stato eseguito su Supabase.
+      </p>
+    </div>`;
+}
+
 // ----------- SUPABASE FETCH -----------
 async function fetchAll() {
-  const [{ data: p }, { data: c }, { data: s }] = await Promise.all([
+  const [resP, resC, resS] = await Promise.all([
     supabase.from('prenotazioni_dettaglio').select('*').order('data_ora', { ascending: false }),
     supabase.from('clienti').select('*').order('cognome'),
     supabase.from('servizi').select('*').eq('attivo', true).order('nome'),
   ]);
-  allPrenotazioni = p || [];
-  allClienti = c || [];
-  allServizi = s || [];
+
+  if (resP.error) throw new Error(resP.error.message);
+  if (resC.error) throw new Error(resC.error.message);
+  if (resS.error) throw new Error(resS.error.message);
+
+  allPrenotazioni = resP.data || [];
+  allClienti = resC.data || [];
+  allServizi = resS.data || [];
 }
 
 // ============================================
@@ -74,7 +121,8 @@ async function fetchAll() {
 async function renderDashboard() {
   const el = document.getElementById('page-dashboard');
   el.innerHTML = '<div class="loader">Caricamento...</div>';
-  await fetchAll();
+  if (!isConfigured()) { showConfigError(el); return; }
+  try { await fetchAll(); } catch(e) { showFetchError(el, e.message); return; }
 
   const oggi = new Date(); oggi.setHours(0,0,0,0);
   const inizioMese = new Date(oggi.getFullYear(), oggi.getMonth(), 1);
@@ -168,7 +216,8 @@ async function renderDashboard() {
 async function renderPrenotazioni() {
   const el = document.getElementById('page-prenotazioni');
   el.innerHTML = '<div class="loader">Caricamento...</div>';
-  await fetchAll();
+  if (!isConfigured()) { showConfigError(el); return; }
+  try { await fetchAll(); } catch(e) { showFetchError(el, e.message); return; }
   buildPrenotazioniUI();
 }
 
@@ -273,7 +322,8 @@ function renderDayBookings(date) {
 async function renderClienti() {
   const el = document.getElementById('page-clienti');
   el.innerHTML = '<div class="loader">Caricamento...</div>';
-  await fetchAll();
+  if (!isConfigured()) { showConfigError(el); return; }
+  try { await fetchAll(); } catch(e) { showFetchError(el, e.message); return; }
   buildClientiUI(allClienti);
 }
 
@@ -341,7 +391,8 @@ function filterClientiUI(q) {
 async function renderServizi() {
   const el = document.getElementById('page-servizi');
   el.innerHTML = '<div class="loader">Caricamento...</div>';
-  await fetchAll();
+  if (!isConfigured()) { showConfigError(el); return; }
+  try { await fetchAll(); } catch(e) { showFetchError(el, e.message); return; }
   el.innerHTML = `
     <div class="page-header">
       <div><div class="page-title">Servizi</div></div>
@@ -370,7 +421,8 @@ async function renderServizi() {
 async function renderStatistiche() {
   const el = document.getElementById('page-statistiche');
   el.innerHTML = '<div class="loader">Caricamento...</div>';
-  await fetchAll();
+  if (!isConfigured()) { showConfigError(el); return; }
+  try { await fetchAll(); } catch(e) { showFetchError(el, e.message); return; }
 
   const oggi = new Date();
   const inizioMese = new Date(oggi.getFullYear(), oggi.getMonth(), 1);
