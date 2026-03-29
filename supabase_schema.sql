@@ -29,7 +29,7 @@ INSERT INTO servizi (nome, durata_minuti, prezzo) VALUES
   ('Taglio uomo', 25, 20.00),
   ('Piega', 30, 25.00),
   ('Colore completo', 120, 80.00),
-  ('Taglio + Piega', 75, 55.00),
+  ('Taglio + Piega1', 75, 55.00),
   ('Meches', 90, 70.00),
   ('Trattamento', 60, 45.00),
   ('Permanente', 120, 75.00);
