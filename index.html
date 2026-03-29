@@ -2,148 +2,1223 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Salon Manager</title>
-  <link rel="stylesheet" href="css/style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Salon Manager – Demo</title>
+  <style>
+    /* ===== RESET & VARIABILI ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --rosa:      #e8748a;
+      --rosa-dark: #c9566f;
+      --rosa-light:#fce8ec;
+      --grigio:    #f5f6fa;
+      --testo:     #2d2d3a;
+      --testo-sec: #7a7a9d;
+      --bordo:     #e2e2ef;
+      --bianco:    #ffffff;
+      --verde:     #34c17b;
+      --giallo:    #f5a623;
+      --blu:       #4a90e2;
+      --ombra:     0 2px 12px rgba(0,0,0,.08);
+      --ombra-lg:  0 8px 32px rgba(0,0,0,.12);
+      --raggio:    14px;
+      --raggio-sm: 8px;
+    }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--grigio);
+      color: var(--testo);
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* ===== SIDEBAR ===== */
+    .sidebar {
+      width: 230px;
+      min-height: 100vh;
+      background: var(--bianco);
+      border-right: 1px solid var(--bordo);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0; left: 0;
+      z-index: 100;
+    }
+    .sidebar-logo {
+      padding: 28px 24px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .sidebar-logo .logo-icon {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--rosa), var(--rosa-dark));
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+    }
+    .sidebar-logo span {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--testo);
+    }
+    .sidebar-logo small {
+      display: block;
+      font-size: 10px;
+      color: var(--rosa);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+    nav { flex: 1; padding: 8px 12px; }
+    .nav-section {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      color: var(--testo-sec);
+      padding: 12px 12px 6px;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: var(--raggio-sm);
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--testo-sec);
+      transition: all .15s;
+      margin-bottom: 2px;
+      position: relative;
+    }
+    .nav-item:hover { background: var(--grigio); color: var(--testo); }
+    .nav-item.active { background: var(--rosa-light); color: var(--rosa); }
+    .nav-item .nav-icon { font-size: 17px; width: 22px; text-align: center; }
+    .nav-item .badge {
+      margin-left: auto;
+      background: var(--rosa);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 1px 7px;
+      border-radius: 20px;
+    }
+    .sidebar-footer {
+      padding: 16px;
+      border-top: 1px solid var(--bordo);
+    }
+    .salon-info {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px;
+      background: var(--grigio);
+      border-radius: var(--raggio-sm);
+    }
+    .salon-avatar {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, #f093fb, var(--rosa));
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; color: #fff; font-size: 14px;
+    }
+    .salon-info-text { flex: 1; min-width: 0; }
+    .salon-info-text strong { font-size: 13px; display: block; }
+    .salon-info-text small { font-size: 11px; color: var(--testo-sec); }
+
+    /* ===== CONTENUTO PRINCIPALE ===== */
+    .main {
+      margin-left: 230px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .topbar {
+      height: 64px;
+      background: var(--bianco);
+      border-bottom: 1px solid var(--bordo);
+      display: flex;
+      align-items: center;
+      padding: 0 28px;
+      gap: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .topbar-title { font-size: 18px; font-weight: 700; flex: 1; }
+    .topbar-date {
+      font-size: 13px;
+      color: var(--testo-sec);
+      background: var(--grigio);
+      padding: 6px 14px;
+      border-radius: 20px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 18px;
+      border-radius: var(--raggio-sm);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all .15s;
+    }
+    .btn-primary { background: var(--rosa); color: #fff; }
+    .btn-primary:hover { background: var(--rosa-dark); }
+    .btn-outline { background: transparent; border: 1.5px solid var(--bordo); color: var(--testo); }
+    .btn-outline:hover { background: var(--grigio); }
+    .btn-sm { padding: 5px 12px; font-size: 12px; }
+    .btn-danger { background: #ffe5ea; color: var(--rosa-dark); }
+    .btn-danger:hover { background: var(--rosa-light); }
+
+    .page { display: none; padding: 28px; }
+    .page.active { display: block; }
+
+    /* ===== CARDS KPI ===== */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+    .kpi-card {
+      background: var(--bianco);
+      border-radius: var(--raggio);
+      padding: 20px;
+      box-shadow: var(--ombra);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .kpi-card .kpi-top {
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .kpi-card .kpi-icon {
+      width: 42px; height: 42px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+    }
+    .kpi-card .kpi-change {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 12px;
+    }
+    .kpi-card .kpi-value { font-size: 28px; font-weight: 800; }
+    .kpi-card .kpi-label { font-size: 12px; color: var(--testo-sec); font-weight: 500; }
+    .up   { background: #e8f8f0; color: var(--verde); }
+    .down { background: #fce8ec; color: var(--rosa-dark); }
+    .ic-rosa   { background: var(--rosa-light); }
+    .ic-verde  { background: #e8f8f0; }
+    .ic-giallo { background: #fff8ea; }
+    .ic-blu    { background: #e8f0fc; }
+
+    /* ===== GRID CONTENUTO ===== */
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 20px;
+    }
+    .card {
+      background: var(--bianco);
+      border-radius: var(--raggio);
+      box-shadow: var(--ombra);
+      overflow: hidden;
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 20px 14px;
+      border-bottom: 1px solid var(--bordo);
+    }
+    .card-title { font-size: 15px; font-weight: 700; }
+    .card-body { padding: 20px; }
+
+    /* ===== AGENDA DEL GIORNO ===== */
+    .agenda-slot {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--grigio);
+      cursor: pointer;
+      transition: .15s;
+    }
+    .agenda-slot:last-child { border-bottom: none; }
+    .agenda-slot:hover { background: var(--grigio); margin: 0 -20px; padding: 12px 20px; }
+    .slot-time {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--testo-sec);
+      width: 44px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .slot-bar {
+      width: 4px; height: 48px; border-radius: 2px; flex-shrink: 0;
+    }
+    .slot-info { flex: 1; }
+    .slot-name { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+    .slot-service { font-size: 12px; color: var(--testo-sec); }
+    .slot-price {
+      font-size: 14px; font-weight: 700; color: var(--verde);
+    }
+    .slot-status {
+      font-size: 11px; font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+    .status-ok      { background: #e8f8f0; color: var(--verde); }
+    .status-attesa  { background: #fff8ea; color: var(--giallo); }
+    .status-libero  { background: var(--grigio); color: var(--testo-sec); }
+
+    /* ===== MINI CALENDARIO ===== */
+    .mini-cal { padding: 16px; }
+    .cal-nav {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .cal-nav button {
+      border: none; background: none; cursor: pointer; font-size: 16px;
+      color: var(--testo-sec); padding: 4px 8px; border-radius: 6px;
+    }
+    .cal-nav button:hover { background: var(--grigio); }
+    .cal-nav .cal-month { font-weight: 700; font-size: 14px; }
+    .cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 2px; }
+    .cal-day-name {
+      text-align: center; font-size: 10px; font-weight: 700;
+      color: var(--testo-sec); padding: 4px 0; text-transform: uppercase;
+    }
+    .cal-day {
+      text-align: center; padding: 6px 2px;
+      font-size: 12px; border-radius: 6px; cursor: pointer;
+      transition: .12s; position: relative;
+    }
+    .cal-day:hover { background: var(--rosa-light); color: var(--rosa); }
+    .cal-day.today { background: var(--rosa); color: #fff; font-weight: 700; }
+    .cal-day.has-event::after {
+      content: ''; position: absolute; bottom: 3px; left: 50%; transform: translateX(-50%);
+      width: 4px; height: 4px; border-radius: 50%; background: var(--rosa);
+    }
+    .cal-day.today.has-event::after { background: #fff; }
+    .cal-day.other-month { color: var(--bordo); }
+    .cal-day.selected { border: 2px solid var(--rosa); color: var(--rosa); font-weight: 700; }
+
+    /* ===== PROSSIMI APPUNTAMENTI ===== */
+    .next-apt {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--grigio);
+    }
+    .next-apt:last-child { border-bottom: none; }
+    .apt-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 13px; color: #fff; flex-shrink: 0;
+    }
+    .apt-info { flex: 1; }
+    .apt-name { font-size: 13px; font-weight: 600; }
+    .apt-detail { font-size: 11px; color: var(--testo-sec); }
+    .apt-time-badge {
+      font-size: 11px; font-weight: 700;
+      background: var(--grigio); padding: 4px 10px; border-radius: 20px;
+    }
+
+    /* ===== SEZIONE CLIENTI ===== */
+    .search-bar {
+      display: flex; gap: 10px; margin-bottom: 20px;
+    }
+    .search-input {
+      flex: 1; padding: 10px 16px;
+      border: 1.5px solid var(--bordo);
+      border-radius: var(--raggio-sm);
+      font-size: 14px; color: var(--testo);
+      background: var(--bianco);
+      outline: none; transition: .15s;
+    }
+    .search-input:focus { border-color: var(--rosa); }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    thead th {
+      text-align: left; padding: 10px 14px;
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .5px; color: var(--testo-sec);
+      border-bottom: 2px solid var(--bordo);
+    }
+    tbody tr {
+      border-bottom: 1px solid var(--grigio);
+      transition: .12s; cursor: pointer;
+    }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--rosa-light); }
+    tbody td { padding: 12px 14px; font-size: 13px; }
+    .client-cell {
+      display: flex; align-items: center; gap: 10px;
+    }
+    .client-av {
+      width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 12px; color: #fff; flex-shrink: 0;
+    }
+    .tag {
+      display: inline-block;
+      font-size: 10px; font-weight: 600;
+      padding: 2px 8px; border-radius: 20px;
+    }
+    .tag-fedelta { background: #fff8ea; color: var(--giallo); }
+    .tag-nuova   { background: #e8f8f0; color: var(--verde); }
+    .tag-vip     { background: #ede8fc; color: #7c5cbf; }
+
+    /* ===== SEZIONE PRENOTAZIONI ===== */
+    .week-grid {
+      display: grid;
+      grid-template-columns: 60px repeat(6, 1fr);
+      gap: 0;
+      border: 1px solid var(--bordo);
+      border-radius: var(--raggio);
+      overflow: hidden;
+      background: var(--bianco);
+    }
+    .wg-header {
+      background: var(--bianco);
+      padding: 12px 8px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 700;
+      border-bottom: 2px solid var(--bordo);
+      border-right: 1px solid var(--bordo);
+    }
+    .wg-header:last-child { border-right: none; }
+    .wg-header.today-col { background: var(--rosa-light); color: var(--rosa); }
+    .wg-header small { display: block; font-size: 18px; font-weight: 800; margin-bottom: 2px; }
+    .wg-time {
+      font-size: 11px; color: var(--testo-sec); font-weight: 600;
+      padding: 0 8px; height: 60px;
+      display: flex; align-items: flex-start; padding-top: 8px;
+      border-right: 1px solid var(--bordo);
+      border-bottom: 1px solid var(--bordo);
+    }
+    .wg-cell {
+      height: 60px;
+      border-right: 1px solid var(--bordo);
+      border-bottom: 1px solid var(--bordo);
+      position: relative; padding: 2px;
+    }
+    .wg-cell:last-child { border-right: none; }
+    .wg-apt {
+      position: absolute; top: 3px; left: 3px; right: 3px;
+      border-radius: 6px; padding: 4px 6px;
+      font-size: 10px; font-weight: 600; cursor: pointer;
+      transition: .12s; line-height: 1.3;
+    }
+    .wg-apt:hover { filter: brightness(.95); transform: scale(1.02); }
+    .apt-c1 { background: #fce8ec; color: var(--rosa-dark); border-left: 3px solid var(--rosa); }
+    .apt-c2 { background: #e8f0fc; color: #2d62b5; border-left: 3px solid var(--blu); }
+    .apt-c3 { background: #e8f8f0; color: #1e8a54; border-left: 3px solid var(--verde); }
+    .apt-c4 { background: #fff3e0; color: #c97b00; border-left: 3px solid var(--giallo); }
+    .apt-c5 { background: #ede8fc; color: #5c34a4; border-left: 3px solid #9b7ee8; }
+
+    /* ===== STATISTICHE ===== */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    .chart-bar-wrap { padding: 4px 0; }
+    .chart-bar-row {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 12px;
+    }
+    .bar-label { font-size: 12px; color: var(--testo-sec); width: 80px; flex-shrink: 0; }
+    .bar-track {
+      flex: 1; height: 10px;
+      background: var(--grigio); border-radius: 6px; overflow: hidden;
+    }
+    .bar-fill { height: 100%; border-radius: 6px; transition: width .6s ease; }
+    .bar-val { font-size: 12px; font-weight: 700; width: 36px; text-align: right; }
+
+    .donut-wrap {
+      display: flex; align-items: center; justify-content: center; gap: 24px;
+    }
+    .donut-legend { display: flex; flex-direction: column; gap: 8px; }
+    .legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+    .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+    .trend-chart { height: 120px; position: relative; overflow: hidden; }
+
+    /* ===== MODALE ===== */
+    .modal-backdrop {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.4);
+      z-index: 200;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity .2s;
+    }
+    .modal-backdrop.open { opacity: 1; pointer-events: all; }
+    .modal {
+      background: var(--bianco);
+      border-radius: var(--raggio);
+      width: 460px; max-width: 95vw;
+      box-shadow: var(--ombra-lg);
+      transform: translateY(24px); transition: transform .2s;
+    }
+    .modal-backdrop.open .modal { transform: translateY(0); }
+    .modal-header {
+      padding: 20px 24px 16px;
+      border-bottom: 1px solid var(--bordo);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .modal-title { font-size: 16px; font-weight: 700; }
+    .modal-close {
+      width: 30px; height: 30px; border-radius: 8px;
+      border: none; background: var(--grigio);
+      cursor: pointer; font-size: 16px; display: flex;
+      align-items: center; justify-content: center;
+    }
+    .modal-close:hover { background: var(--bordo); }
+    .modal-body { padding: 20px 24px; }
+    .modal-footer {
+      padding: 14px 24px 20px;
+      display: flex; gap: 10px; justify-content: flex-end;
+    }
+    .form-row { margin-bottom: 16px; }
+    .form-row label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 6px; color: var(--testo-sec); }
+    .form-row input,
+    .form-row select {
+      width: 100%; padding: 10px 14px;
+      border: 1.5px solid var(--bordo);
+      border-radius: var(--raggio-sm);
+      font-size: 14px; color: var(--testo);
+      background: var(--bianco); outline: none; transition: .15s;
+      -webkit-appearance: none;
+    }
+    .form-row input:focus,
+    .form-row select:focus { border-color: var(--rosa); }
+    .form-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    /* ===== NOTIFICHE TOAST ===== */
+    .toast-container {
+      position: fixed; bottom: 24px; right: 24px; z-index: 300;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .toast {
+      background: var(--testo); color: #fff;
+      padding: 12px 18px; border-radius: var(--raggio-sm);
+      font-size: 13px; font-weight: 500;
+      box-shadow: var(--ombra-lg);
+      display: flex; align-items: center; gap: 10px;
+      animation: slideIn .25s ease;
+    }
+    .toast.success { background: var(--verde); }
+    .toast.error   { background: var(--rosa-dark); }
+    @keyframes slideIn {
+      from { transform: translateX(60px); opacity: 0; }
+      to   { transform: translateX(0);    opacity: 1; }
+    }
+
+    /* ===== UTILITY ===== */
+    .flex { display: flex; }
+    .gap-8 { gap: 8px; }
+    .gap-12 { gap: 12px; }
+    .mt-4 { margin-top: 4px; }
+    .section-subtitle { font-size: 13px; color: var(--testo-sec); margin-bottom: 20px; }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 900px) {
+      .sidebar { display: none; }
+      .main { margin-left: 0; }
+      .kpi-grid { grid-template-columns: 1fr 1fr; }
+      .content-grid { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
 
-  <!-- SIDEBAR -->
-  <nav class="sidebar">
-    <div class="sidebar-logo">
-      <div class="logo-icon">S</div>
-      <div>
-        <div class="logo-name">Salon Manager</div>
-        <div class="logo-sub">Gestionale</div>
-      </div>
+<!-- ===== SIDEBAR ===== -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">✂️</div>
+    <div>
+      <span>Salon Manager</span>
+      <small>Demo</small>
     </div>
-    <ul class="nav-links">
-      <li><a href="#" class="nav-item active" data-page="dashboard" onclick="navigateTo('dashboard',this)">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-        Dashboard
-      </a></li>
-      <li><a href="#" class="nav-item" data-page="prenotazioni" onclick="navigateTo('prenotazioni',this)">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-        Prenotazioni
-      </a></li>
-      <li><a href="#" class="nav-item" data-page="clienti" onclick="navigateTo('clienti',this)">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        Clienti
-      </a></li>
-      <li><a href="#" class="nav-item" data-page="servizi" onclick="navigateTo('servizi',this)">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-        Servizi
-      </a></li>
-      <li><a href="#" class="nav-item" data-page="statistiche" onclick="navigateTo('statistiche',this)">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-        Statistiche
-      </a></li>
-    </ul>
+  </div>
+
+  <nav>
+    <div class="nav-section">Principale</div>
+    <div class="nav-item active" onclick="goTo('dashboard', this)">
+      <span class="nav-icon">🏠</span> Dashboard
+    </div>
+    <div class="nav-item" onclick="goTo('prenotazioni', this)">
+      <span class="nav-icon">📅</span> Prenotazioni
+      <span class="badge">3</span>
+    </div>
+    <div class="nav-item" onclick="goTo('clienti', this)">
+      <span class="nav-icon">👥</span> Clienti
+    </div>
+    <div class="nav-item" onclick="goTo('statistiche', this)">
+      <span class="nav-icon">📊</span> Statistiche
+    </div>
+    <div class="nav-section">Strumenti</div>
+    <div class="nav-item" onclick="showToast('Funzione disponibile nella versione completa', 'info')">
+      <span class="nav-icon">📣</span> Promemoria SMS
+    </div>
+    <div class="nav-item" onclick="showToast('Funzione disponibile nella versione completa', 'info')">
+      <span class="nav-icon">💰</span> Cassa & Fatture
+    </div>
+    <div class="nav-item" onclick="showToast('Funzione disponibile nella versione completa', 'info')">
+      <span class="nav-icon">📦</span> Magazzino
+    </div>
   </nav>
 
-  <!-- MAIN CONTENT -->
-  <main class="main">
-    <div id="page-dashboard" class="page active"></div>
-    <div id="page-prenotazioni" class="page"></div>
-    <div id="page-clienti" class="page"></div>
-    <div id="page-servizi" class="page"></div>
-    <div id="page-statistiche" class="page"></div>
-  </main>
-
-  <!-- MODAL PRENOTAZIONE -->
-  <div id="modal-overlay" class="modal-overlay hidden" onclick="closeModal(event)">
-    <div class="modal" id="modal-booking">
-      <div class="modal-header">
-        <h2 id="modal-title">Nuova prenotazione</h2>
-        <button class="modal-close" onclick="closeModal()">✕</button>
+  <div class="sidebar-footer">
+    <div class="salon-info">
+      <div class="salon-avatar">S</div>
+      <div class="salon-info-text">
+        <strong>Salon Bella</strong>
+        <small>Via Roma 12, Padova</small>
       </div>
-      <div class="modal-body">
-        <div class="form-grid">
-          <div class="form-group">
-            <label>Cliente *</label>
-            <select id="f-cliente"></select>
+    </div>
+  </div>
+</aside>
+
+<!-- ===== MAIN ===== -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-title" id="pageTitle">Dashboard</div>
+    <div class="topbar-date" id="topbarDate"></div>
+    <button class="btn btn-primary" id="mainActionBtn" onclick="openModal('modalNuovaPrenotazione')">
+      ➕ Nuova Prenotazione
+    </button>
+  </div>
+
+  <!-- ===== DASHBOARD ===== -->
+  <div class="page active" id="page-dashboard">
+    <!-- KPI -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-top">
+          <div class="kpi-icon ic-rosa">📅</div>
+          <div class="kpi-change up">▲ 12%</div>
+        </div>
+        <div class="kpi-value">8</div>
+        <div class="kpi-label">Appuntamenti oggi</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-top">
+          <div class="kpi-icon ic-verde">💶</div>
+          <div class="kpi-change up">▲ 8%</div>
+        </div>
+        <div class="kpi-value">€ 320</div>
+        <div class="kpi-label">Incasso stimato oggi</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-top">
+          <div class="kpi-icon ic-giallo">👥</div>
+          <div class="kpi-change up">▲ 3</div>
+        </div>
+        <div class="kpi-value">142</div>
+        <div class="kpi-label">Clienti totali</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-top">
+          <div class="kpi-icon ic-blu">⭐</div>
+          <div class="kpi-change down">▼ 2%</div>
+        </div>
+        <div class="kpi-value">4.8</div>
+        <div class="kpi-label">Valutazione media</div>
+      </div>
+    </div>
+
+    <!-- Griglia contenuto -->
+    <div class="content-grid">
+      <!-- Agenda del giorno -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">📋 Agenda di Oggi</div>
+          <button class="btn btn-outline btn-sm" onclick="goTo('prenotazioni', document.querySelector('[onclick*=prenotazioni]'))">Vedi settimana →</button>
+        </div>
+        <div class="card-body" id="agendaOggi"></div>
+      </div>
+
+      <!-- Colonna destra -->
+      <div style="display:flex;flex-direction:column;gap:20px;">
+        <!-- Mini calendario -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">📆 Calendario</div>
           </div>
-          <div class="form-group">
-            <label>Servizio *</label>
-            <select id="f-servizio" onchange="onServizioChange()"></select>
+          <div class="mini-cal" id="miniCal"></div>
+        </div>
+
+        <!-- Prossimi appuntamenti -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">🔜 Prossimi 3 giorni</div>
           </div>
-          <div class="form-group">
-            <label>Data *</label>
-            <input type="date" id="f-data" />
-          </div>
-          <div class="form-group">
-            <label>Ora *</label>
-            <input type="time" id="f-ora" value="09:00" step="1800" />
-          </div>
-          <div class="form-group">
-            <label>Prezzo (€)</label>
-            <input type="number" id="f-prezzo" step="0.5" />
-          </div>
-          <div class="form-group">
-            <label>Stato</label>
-            <select id="f-stato">
-              <option value="confermata">Confermata</option>
-              <option value="completata">Completata</option>
-              <option value="cancellata">Cancellata</option>
-            </select>
-          </div>
-          <div class="form-group full">
-            <label>Note</label>
-            <textarea id="f-note" rows="2"></textarea>
-          </div>
+          <div class="card-body" id="prossimiApt"></div>
         </div>
       </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary" onclick="closeModal()">Annulla</button>
-        <button class="btn btn-primary" onclick="savePrenotazione()">Salva</button>
+    </div>
+  </div><!-- /dashboard -->
+
+  <!-- ===== PRENOTAZIONI ===== -->
+  <div class="page" id="page-prenotazioni">
+    <p class="section-subtitle">Vista settimanale – Settimana corrente</p>
+    <div class="week-grid" id="weekGrid"></div>
+  </div>
+
+  <!-- ===== CLIENTI ===== -->
+  <div class="page" id="page-clienti">
+    <div class="search-bar">
+      <input class="search-input" type="text" placeholder="🔍  Cerca per nome, telefono o servizio…" id="searchInput" oninput="filtraClienti(this.value)">
+      <button class="btn btn-primary" onclick="openModal('modalNuovoCliente')">➕ Nuovo cliente</button>
+    </div>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Cliente</th>
+              <th>Telefono</th>
+              <th>Ultimo servizio</th>
+              <th>Ultima visita</th>
+              <th>Spesa totale</th>
+              <th>Tag</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="tableClienti"></tbody>
+        </table>
       </div>
     </div>
   </div>
 
-  <!-- MODAL CLIENTE -->
-  <div id="modal-cliente-overlay" class="modal-overlay hidden" onclick="closeModalCliente(event)">
-    <div class="modal">
-      <div class="modal-header">
-        <h2 id="modal-cliente-title">Nuovo cliente</h2>
-        <button class="modal-close" onclick="closeModalCliente()">✕</button>
+  <!-- ===== STATISTICHE ===== -->
+  <div class="page" id="page-statistiche">
+    <p class="section-subtitle">Riepilogo degli ultimi 30 giorni</p>
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-top"><div class="kpi-icon ic-verde">💶</div><div class="kpi-change up">▲ 15%</div></div>
+        <div class="kpi-value">€ 4.850</div>
+        <div class="kpi-label">Fatturato mensile</div>
       </div>
-      <div class="modal-body">
-        <div class="form-grid">
-          <div class="form-group">
-            <label>Nome *</label>
-            <input type="text" id="fc-nome" />
-          </div>
-          <div class="form-group">
-            <label>Cognome *</label>
-            <input type="text" id="fc-cognome" />
-          </div>
-          <div class="form-group">
-            <label>Telefono</label>
-            <input type="tel" id="fc-telefono" />
-          </div>
-          <div class="form-group">
-            <label>Email</label>
-            <input type="email" id="fc-email" />
-          </div>
-          <div class="form-group full">
-            <label>Note</label>
-            <textarea id="fc-note" rows="2"></textarea>
+      <div class="kpi-card">
+        <div class="kpi-top"><div class="kpi-icon ic-rosa">📅</div><div class="kpi-change up">▲ 6</div></div>
+        <div class="kpi-value">78</div>
+        <div class="kpi-label">Appuntamenti totali</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-top"><div class="kpi-icon ic-giallo">💈</div><div class="kpi-change up">▲ 5%</div></div>
+        <div class="kpi-value">€ 62</div>
+        <div class="kpi-label">Scontrino medio</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-top"><div class="kpi-icon ic-blu">🔄</div><div class="kpi-change down">▼ 1%</div></div>
+        <div class="kpi-value">68%</div>
+        <div class="kpi-label">Tasso di ritorno</div>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <!-- Servizi più richiesti -->
+      <div class="card">
+        <div class="card-header"><div class="card-title">💈 Servizi più richiesti</div></div>
+        <div class="card-body">
+          <div class="chart-bar-wrap" id="barServ"></div>
+        </div>
+      </div>
+      <!-- Incasso per giorno -->
+      <div class="card">
+        <div class="card-header"><div class="card-title">📈 Incasso per giorno della settimana</div></div>
+        <div class="card-body">
+          <div class="chart-bar-wrap" id="barGiorni"></div>
+        </div>
+      </div>
+      <!-- Fascia oraria -->
+      <div class="card">
+        <div class="card-header"><div class="card-title">⏰ Fasce orarie più affollate</div></div>
+        <div class="card-body">
+          <div class="chart-bar-wrap" id="barOrari"></div>
+        </div>
+      </div>
+      <!-- Ripartizione clienti -->
+      <div class="card">
+        <div class="card-header"><div class="card-title">👥 Tipologia clienti</div></div>
+        <div class="card-body">
+          <div class="donut-wrap">
+            <svg width="110" height="110" viewBox="0 0 110 110" id="donutSvg"></svg>
+            <div class="donut-legend" id="donutLegend"></div>
           </div>
         </div>
       </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary" onclick="closeModalCliente()">Annulla</button>
-        <button class="btn btn-primary" onclick="saveCliente()">Salva</button>
-      </div>
     </div>
   </div>
+</div>
 
-  <!-- TOAST -->
-  <div id="toast" class="toast hidden"></div>
+<!-- ===== MODALE NUOVA PRENOTAZIONE ===== -->
+<div class="modal-backdrop" id="modalNuovaPrenotazione">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <div class="modal-title">📅 Nuova Prenotazione</div>
+      <button class="modal-close" onclick="closeModal('modalNuovaPrenotazione')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <label>Cliente</label>
+        <select id="np_cliente">
+          <option value="">— Seleziona cliente —</option>
+          <option>Giulia Rossi</option>
+          <option>Marta Bianchi</option>
+          <option>Laura Conti</option>
+          <option>Sofia Greco</option>
+          <option>Elena Marini</option>
+          <option>Carla Neri</option>
+          <option>Francesca Rizzo</option>
+          <option>Anna Lombardi</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label>Servizio</label>
+        <select id="np_servizio">
+          <option>Taglio e piega</option>
+          <option>Colorazione</option>
+          <option>Trattamento keratina</option>
+          <option>Permanente</option>
+          <option>Messa in piega</option>
+          <option>Balayage</option>
+          <option>Taglio bambino</option>
+        </select>
+      </div>
+      <div class="form-2col">
+        <div class="form-row">
+          <label>Data</label>
+          <input type="date" id="np_data">
+        </div>
+        <div class="form-row">
+          <label>Ora</label>
+          <select id="np_ora">
+            <option>09:00</option><option>09:30</option>
+            <option>10:00</option><option>10:30</option>
+            <option>11:00</option><option>11:30</option>
+            <option>12:00</option><option>14:00</option>
+            <option>14:30</option><option>15:00</option>
+            <option>15:30</option><option>16:00</option>
+            <option>16:30</option><option>17:00</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <label>Note (opzionale)</label>
+        <input type="text" placeholder="Es. allergie, preferenze colore…" id="np_note">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modalNuovaPrenotazione')">Annulla</button>
+      <button class="btn btn-primary" onclick="salvaPrenotazione()">✅ Salva prenotazione</button>
+    </div>
+  </div>
+</div>
 
-  <!-- SCRIPTS -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/config.js"></script>
-  <script src="js/app.js"></script>
+<!-- ===== MODALE NUOVO CLIENTE ===== -->
+<div class="modal-backdrop" id="modalNuovoCliente">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <div class="modal-title">👥 Nuovo Cliente</div>
+      <button class="modal-close" onclick="closeModal('modalNuovoCliente')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-2col">
+        <div class="form-row">
+          <label>Nome</label>
+          <input type="text" placeholder="Es. Giulia" id="nc_nome">
+        </div>
+        <div class="form-row">
+          <label>Cognome</label>
+          <input type="text" placeholder="Es. Rossi" id="nc_cognome">
+        </div>
+      </div>
+      <div class="form-row">
+        <label>Telefono</label>
+        <input type="tel" placeholder="Es. 347 123 4567" id="nc_tel">
+      </div>
+      <div class="form-row">
+        <label>Email</label>
+        <input type="email" placeholder="Es. giulia@email.com" id="nc_email">
+      </div>
+      <div class="form-row">
+        <label>Servizio preferito</label>
+        <select id="nc_servizio">
+          <option>Taglio e piega</option>
+          <option>Colorazione</option>
+          <option>Trattamento keratina</option>
+          <option>Balayage</option>
+          <option>Messa in piega</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modalNuovoCliente')">Annulla</button>
+      <button class="btn btn-primary" onclick="salvaCliente()">✅ Salva cliente</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TOAST ===== -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+/* =============================================
+   DATI DEMO
+   ============================================= */
+const COLORI = ['#e8748a','#4a90e2','#34c17b','#f5a623','#9b7ee8','#e8748a'];
+
+const agendaData = [
+  { ora:'09:00', nome:'Giulia Rossi',   servizio:'Taglio e piega',     prezzo:'€ 45', status:'ok',     colore:'#e8748a' },
+  { ora:'09:30', nome:'Marta Bianchi',  servizio:'Colorazione',        prezzo:'€ 80', status:'ok',     colore:'#4a90e2' },
+  { ora:'10:30', nome:'Laura Conti',    servizio:'Trattamento keratina',prezzo:'€ 120',status:'attesa', colore:'#9b7ee8' },
+  { ora:'11:30', nome:'Sofia Greco',    servizio:'Balayage',           prezzo:'€ 90', status:'ok',     colore:'#34c17b' },
+  { ora:'12:00', nome:'',              servizio:'—',                  prezzo:'',     status:'libero',  colore:'#ddd' },
+  { ora:'14:00', nome:'Elena Marini',   servizio:'Messa in piega',     prezzo:'€ 30', status:'ok',     colore:'#f5a623' },
+  { ora:'15:30', nome:'Carla Neri',     servizio:'Taglio e piega',     prezzo:'€ 45', status:'attesa', colore:'#e8748a' },
+  { ora:'17:00', nome:'Anna Lombardi',  servizio:'Colorazione',        prezzo:'€ 75', status:'ok',     colore:'#4a90e2' },
+];
+
+const clientiData = [
+  { nome:'Giulia Rossi',     tel:'347 123 4567', servizio:'Taglio e piega',      ultima:'15 Mar 2026', spesa:'€ 320', tag:'fedelta' },
+  { nome:'Marta Bianchi',    tel:'328 987 6543', servizio:'Colorazione',         ultima:'22 Mar 2026', spesa:'€ 510', tag:'vip' },
+  { nome:'Laura Conti',      tel:'366 456 7890', servizio:'Trattamento keratina',ultima:'10 Mar 2026', spesa:'€ 240', tag:'fedelta' },
+  { nome:'Sofia Greco',      tel:'347 222 3333', servizio:'Balayage',            ultima:'28 Mar 2026', spesa:'€ 180', tag:'nuova' },
+  { nome:'Elena Marini',     tel:'338 111 2222', servizio:'Messa in piega',      ultima:'20 Mar 2026', spesa:'€ 420', tag:'vip' },
+  { nome:'Carla Neri',       tel:'329 333 4444', servizio:'Taglio e piega',      ultima:'5 Mar 2026',  spesa:'€ 135', tag:'fedelta' },
+  { nome:'Francesca Rizzo',  tel:'347 555 6666', servizio:'Permanente',          ultima:'1 Mar 2026',  spesa:'€ 290', tag:'fedelta' },
+  { nome:'Anna Lombardi',    tel:'340 777 8888', servizio:'Colorazione',         ultima:'27 Mar 2026', spesa:'€ 640', tag:'vip' },
+];
+
+const prossimiData = [
+  { nome:'Sofia Greco',     servizio:'Balayage',      giorno:'Domani',       ora:'09:00', colore:'#34c17b' },
+  { nome:'Elena Marini',    servizio:'Messa in piega',giorno:'Domani',       ora:'11:30', colore:'#f5a623' },
+  { nome:'Giulia Rossi',    servizio:'Taglio',        giorno:'Dopodomani',   ora:'10:00', colore:'#e8748a' },
+];
+
+const weekData = [
+  { giorno:1, ora:0, nome:'Giulia R.',   servizio:'Taglio',      c:'apt-c1', h:1 },
+  { giorno:1, ora:2, nome:'Marta B.',    servizio:'Colorazione', c:'apt-c2', h:2 },
+  { giorno:2, ora:1, nome:'Laura C.',    servizio:'Keratina',    c:'apt-c5', h:2 },
+  { giorno:2, ora:4, nome:'Sofia G.',    servizio:'Balayage',    c:'apt-c3', h:1 },
+  { giorno:3, ora:0, nome:'Elena M.',    servizio:'Piega',       c:'apt-c4', h:1 },
+  { giorno:3, ora:2, nome:'Carla N.',    servizio:'Taglio',      c:'apt-c1', h:1 },
+  { giorno:3, ora:3, nome:'Anna L.',     servizio:'Colorazione', c:'apt-c2', h:2 },
+  { giorno:4, ora:1, nome:'Francesca R.', servizio:'Permanente', c:'apt-c5', h:2 },
+  { giorno:4, ora:4, nome:'Marta B.',    servizio:'Piega',       c:'apt-c4', h:1 },
+  { giorno:5, ora:0, nome:'Giulia R.',   servizio:'Balayage',    c:'apt-c3', h:2 },
+  { giorno:5, ora:3, nome:'Sofia G.',    servizio:'Taglio',      c:'apt-c1', h:1 },
+  { giorno:0, ora:2, nome:'Laura C.',    servizio:'Colorazione', c:'apt-c2', h:1 },
+];
+
+/* =============================================
+   NAVIGAZIONE
+   ============================================= */
+function goTo(page, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  if (el) el.classList.add('active');
+  const titles = { dashboard:'Dashboard', prenotazioni:'Prenotazioni', clienti:'Clienti', statistiche:'Statistiche' };
+  document.getElementById('pageTitle').textContent = titles[page] || page;
+  const btnLabels = { dashboard:'➕ Nuova Prenotazione', prenotazioni:'➕ Nuova Prenotazione', clienti:'➕ Nuovo Cliente', statistiche:'📤 Esporta Report' };
+  const btn = document.getElementById('mainActionBtn');
+  btn.textContent = btnLabels[page];
+  if (page === 'clienti') btn.onclick = () => openModal('modalNuovoCliente');
+  else if (page === 'statistiche') btn.onclick = () => showToast('Report esportato in PDF! ✅','success');
+  else btn.onclick = () => openModal('modalNuovaPrenotazione');
+}
+
+/* =============================================
+   DATA TOPBAR
+   ============================================= */
+function aggiornaData() {
+  const oggi = new Date();
+  const opts = { weekday:'long', day:'numeric', month:'long', year:'numeric' };
+  document.getElementById('topbarDate').textContent = oggi.toLocaleDateString('it-IT', opts);
+  document.getElementById('np_data').value = oggi.toISOString().split('T')[0];
+}
+
+/* =============================================
+   AGENDA
+   ============================================= */
+function renderAgenda() {
+  const cont = document.getElementById('agendaOggi');
+  const statusMap = { ok:'status-ok', attesa:'status-attesa', libero:'status-libero' };
+  const statusLabel = { ok:'Confermato', attesa:'In attesa', libero:'Libero' };
+  cont.innerHTML = agendaData.map(s => `
+    <div class="agenda-slot">
+      <div class="slot-time">${s.ora}</div>
+      <div class="slot-bar" style="background:${s.colore}"></div>
+      <div class="slot-info">
+        <div class="slot-name">${s.nome || 'Slot libero'}</div>
+        <div class="slot-service">${s.servizio}</div>
+      </div>
+      ${s.prezzo ? `<div class="slot-price">${s.prezzo}</div>` : ''}
+      <div class="slot-status ${statusMap[s.status]}">${statusLabel[s.status]}</div>
+    </div>
+  `).join('');
+}
+
+/* =============================================
+   MINI CALENDARIO
+   ============================================= */
+let calDate = new Date();
+function renderMiniCal() {
+  const today = new Date();
+  const y = calDate.getFullYear(), m = calDate.getMonth();
+  const firstDay = new Date(y, m, 1).getDay();
+  const daysInMonth = new Date(y, m + 1, 0).getDate();
+  const monthNames = ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
+  const dayNames = ['Lu','Ma','Me','Gi','Ve','Sa','Do'];
+  const hasPren = [3,7,8,10,12,14,15,17,19,21,22,24,25,28,29];
+
+  let html = `
+    <div class="cal-nav">
+      <button onclick="calMove(-1)">‹</button>
+      <div class="cal-month">${monthNames[m]} ${y}</div>
+      <button onclick="calMove(1)">›</button>
+    </div>
+    <div class="cal-grid">
+      ${dayNames.map(d => `<div class="cal-day-name">${d}</div>`).join('')}
+  `;
+  const startEmpty = (firstDay === 0 ? 6 : firstDay - 1);
+  for (let i = 0; i < startEmpty; i++) html += `<div class="cal-day other-month"></div>`;
+  for (let d = 1; d <= daysInMonth; d++) {
+    const isToday = d === today.getDate() && m === today.getMonth() && y === today.getFullYear();
+    const hasPr = hasPren.includes(d);
+    html += `<div class="cal-day ${isToday ? 'today' : ''} ${hasPr ? 'has-event' : ''}">${d}</div>`;
+  }
+  html += `</div>`;
+  document.getElementById('miniCal').innerHTML = html;
+}
+function calMove(dir) {
+  calDate.setMonth(calDate.getMonth() + dir);
+  renderMiniCal();
+}
+
+/* =============================================
+   PROSSIMI APPUNTAMENTI
+   ============================================= */
+function renderProssimi() {
+  const cont = document.getElementById('prossimiApt');
+  cont.innerHTML = prossimiData.map(a => `
+    <div class="next-apt">
+      <div class="apt-avatar" style="background:${a.colore}">${a.nome[0]}</div>
+      <div class="apt-info">
+        <div class="apt-name">${a.nome}</div>
+        <div class="apt-detail">${a.servizio}</div>
+      </div>
+      <div>
+        <div class="apt-time-badge">${a.giorno}</div>
+        <div style="text-align:center;font-size:11px;color:var(--testo-sec);margin-top:2px">${a.ora}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+/* =============================================
+   VISTA SETTIMANALE
+   ============================================= */
+function renderWeek() {
+  const oggi = new Date();
+  const lun = new Date(oggi);
+  lun.setDate(oggi.getDate() - (oggi.getDay() === 0 ? 6 : oggi.getDay() - 1));
+  const giorni = ['Lun','Mar','Mer','Gio','Ven','Sab'];
+  const ore = ['09:00','10:00','11:00','12:00','15:00','16:00','17:00'];
+  const todayIdx = oggi.getDay() === 0 ? 6 : oggi.getDay() - 1;
+
+  let html = '<div class="wg-header"></div>';
+  for (let g = 0; g < 6; g++) {
+    const d = new Date(lun); d.setDate(lun.getDate() + g);
+    const isToday = g === todayIdx;
+    html += `<div class="wg-header ${isToday ? 'today-col' : ''}"><small>${d.getDate()}</small>${giorni[g]}</div>`;
+  }
+
+  for (let o = 0; o < ore.length; o++) {
+    html += `<div class="wg-time">${ore[o]}</div>`;
+    for (let g = 0; g < 6; g++) {
+      const apts = weekData.filter(a => a.giorno === g && a.ora === o);
+      let cellContent = apts.map(a =>
+        `<div class="wg-apt ${a.c}" onclick="showToast('${a.nome} – ${a.servizio}','info')">${a.nome}<br><span style="font-weight:400;opacity:.8">${a.servizio}</span></div>`
+      ).join('');
+      html += `<div class="wg-cell">${cellContent}</div>`;
+    }
+  }
+
+  document.getElementById('weekGrid').innerHTML = html;
+}
+
+/* =============================================
+   TABELLA CLIENTI
+   ============================================= */
+let clientiList = [...clientiData];
+function renderClienti(data) {
+  const tagLabel = { fedelta:'⭐ Fedele', nuova:'✨ Nuova', vip:'💎 VIP' };
+  const tagClass = { fedelta:'tag-fedelta', nuova:'tag-nuova', vip:'tag-vip' };
+  document.getElementById('tableClienti').innerHTML = data.map((c, i) => `
+    <tr onclick="showToast('Scheda di ${c.nome} aperta','info')">
+      <td><div class="client-cell">
+        <div class="client-av" style="background:${COLORI[i % COLORI.length]}">${c.nome.split(' ').map(x=>x[0]).join('')}</div>
+        <strong>${c.nome}</strong>
+      </div></td>
+      <td>${c.tel}</td>
+      <td>${c.servizio}</td>
+      <td>${c.ultima}</td>
+      <td style="font-weight:700;color:var(--verde)">${c.spesa}</td>
+      <td><span class="tag ${tagClass[c.tag]}">${tagLabel[c.tag]}</span></td>
+      <td>
+        <button class="btn btn-outline btn-sm" onclick="event.stopPropagation();openModal('modalNuovaPrenotazione')">📅</button>
+        <button class="btn btn-danger btn-sm" onclick="event.stopPropagation();showToast('Scheda eliminata','error')">🗑</button>
+      </td>
+    </tr>
+  `).join('');
+}
+function filtraClienti(q) {
+  const f = q.toLowerCase();
+  renderClienti(clientiList.filter(c =>
+    c.nome.toLowerCase().includes(f) ||
+    c.tel.includes(f) ||
+    c.servizio.toLowerCase().includes(f)
+  ));
+}
+
+/* =============================================
+   STATISTICHE – BARRE
+   ============================================= */
+function renderBarre(id, items, colore) {
+  const max = Math.max(...items.map(i => i.val));
+  document.getElementById(id).innerHTML = items.map(item => `
+    <div class="chart-bar-row">
+      <div class="bar-label">${item.label}</div>
+      <div class="bar-track">
+        <div class="bar-fill" style="width:${(item.val/max*100).toFixed(0)}%;background:${colore}"></div>
+      </div>
+      <div class="bar-val" style="color:${colore}">${item.val}${item.suffix||''}</div>
+    </div>
+  `).join('');
+}
+function renderStatistiche() {
+  renderBarre('barServ', [
+    { label:'Taglio & piega', val:34 },
+    { label:'Colorazione', val:22 },
+    { label:'Balayage', val:11 },
+    { label:'Keratina', val:7 },
+    { label:'Piega', val:4 },
+  ], 'var(--rosa)');
+
+  renderBarre('barGiorni', [
+    { label:'Lunedì',    val:420, suffix:'€' },
+    { label:'Martedì',  val:610, suffix:'€' },
+    { label:'Mercoledì',val:580, suffix:'€' },
+    { label:'Giovedì',  val:730, suffix:'€' },
+    { label:'Venerdì',  val:890, suffix:'€' },
+    { label:'Sabato',   val:620, suffix:'€' },
+  ], 'var(--blu)');
+
+  renderBarre('barOrari', [
+    { label:'09:00–11:00', val:28 },
+    { label:'11:00–13:00', val:18 },
+    { label:'14:00–16:00', val:20 },
+    { label:'16:00–18:00', val:12 },
+  ], 'var(--verde)');
+
+  // Donut chart SVG
+  const segments = [
+    { label:'Clienti VIP',    perc:22, color:'#4a90e2' },
+    { label:'Clienti fedeli', perc:48, color:'#e8748a' },
+    { label:'Nuove clienti',  perc:30, color:'#34c17b' },
+  ];
+  const cx = 55, cy = 55, r = 38, stroke = 18;
+  let offset = 0;
+  const circ = 2 * Math.PI * r;
+  let svgPaths = '';
+  segments.forEach(s => {
+    const dash = circ * s.perc / 100;
+    svgPaths += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${s.color}" stroke-width="${stroke}" stroke-dasharray="${dash} ${circ - dash}" stroke-dashoffset="${-offset}" transform="rotate(-90 ${cx} ${cy})" stroke-linecap="butt"/>`;
+    offset += dash;
+  });
+  document.getElementById('donutSvg').innerHTML = svgPaths;
+  document.getElementById('donutLegend').innerHTML = segments.map(s => `
+    <div class="legend-item">
+      <div class="legend-dot" style="background:${s.color}"></div>
+      <div><strong>${s.perc}%</strong> ${s.label}</div>
+    </div>
+  `).join('');
+}
+
+/* =============================================
+   MODALI
+   ============================================= */
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+  document.getElementById(id).onclick = () => closeModal(id);
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+function salvaPrenotazione() {
+  const cliente = document.getElementById('np_cliente').value;
+  const servizio = document.getElementById('np_servizio').value;
+  const data = document.getElementById('np_data').value;
+  const ora = document.getElementById('np_ora').value;
+  if (!cliente) { showToast('Seleziona un cliente!','error'); return; }
+  closeModal('modalNuovaPrenotazione');
+  showToast(`✅ Prenotazione salvata: ${cliente} – ${servizio} – ${data} alle ${ora}`, 'success');
+}
+
+function salvaCliente() {
+  const nome = document.getElementById('nc_nome').value;
+  const cognome = document.getElementById('nc_cognome').value;
+  if (!nome || !cognome) { showToast('Inserisci nome e cognome!','error'); return; }
+  const nuovo = {
+    nome: `${nome} ${cognome}`,
+    tel: document.getElementById('nc_tel').value || '—',
+    servizio: document.getElementById('nc_servizio').value,
+    ultima: 'Oggi',
+    spesa: '€ 0',
+    tag: 'nuova'
+  };
+  clientiList.unshift(nuovo);
+  renderClienti(clientiList);
+  closeModal('modalNuovoCliente');
+  showToast(`✅ Cliente ${nome} ${cognome} aggiunto!`, 'success');
+}
+
+/* =============================================
+   TOAST
+   ============================================= */
+function showToast(msg, type = 'info') {
+  const cont = document.getElementById('toastContainer');
+  const t = document.createElement('div');
+  t.className = `toast ${type === 'success' ? 'success' : type === 'error' ? 'error' : ''}`;
+  t.textContent = msg;
+  cont.appendChild(t);
+  setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateX(60px)'; t.style.transition = '.3s'; setTimeout(()=>t.remove(), 320); }, 3000);
+}
+
+/* =============================================
+   INIT
+   ============================================= */
+aggiornaData();
+renderAgenda();
+renderMiniCal();
+renderProssimi();
+renderWeek();
+renderClienti(clientiList);
+renderStatistiche();
+</script>
 </body>
 </html>
