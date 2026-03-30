@@ -36,79 +36,49 @@
 
     /* SIDEBAR */
     .sidebar {
-      width: 220px;
-      min-height: 100vh;
-      background: var(--surface);
-      border-right: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      position: fixed;
-      top: 0; left: 0;
-      z-index: 100;
+      width: 220px; min-height: 100vh;
+      background: var(--surface); border-right: 1px solid var(--border);
+      display: flex; flex-direction: column;
+      position: fixed; top: 0; left: 0; z-index: 100;
     }
     .sidebar-logo {
-      padding: 18px 16px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      padding: 18px 16px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 10px;
     }
     .logo-mark {
-      width: 32px; height: 32px;
-      background: var(--accent);
-      border-radius: var(--radius);
-      display: flex; align-items: center; justify-content: center;
-      color: #fff;
-      font-weight: 700;
-      font-size: 15px;
-      flex-shrink: 0;
+      width: 32px; height: 32px; background: var(--accent);
+      border-radius: var(--radius); display: flex; align-items: center;
+      justify-content: center; color: #fff; font-weight: 700; font-size: 15px; flex-shrink: 0;
     }
     .logo-text strong { font-size: 14px; font-weight: 700; display: block; }
     .logo-text span { font-size: 11px; color: var(--muted); }
     nav { flex: 1; padding: 10px 8px; }
     .nav-label {
-      font-size: 10px; font-weight: 700;
-      text-transform: uppercase; letter-spacing: .07em;
-      color: var(--hint);
-      padding: 10px 8px 4px;
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .07em; color: var(--hint); padding: 10px 8px 4px;
     }
     .nav-item {
       display: flex; align-items: center; gap: 9px;
-      padding: 8px 10px;
-      border-radius: var(--radius);
-      cursor: pointer;
-      font-size: 13px; font-weight: 500;
-      color: var(--muted);
-      transition: background .1s, color .1s;
-      margin-bottom: 1px;
+      padding: 8px 10px; border-radius: var(--radius); cursor: pointer;
+      font-size: 13px; font-weight: 500; color: var(--muted);
+      transition: background .1s, color .1s; margin-bottom: 1px;
     }
     .nav-item:hover { background: var(--bg); color: var(--text); }
     .nav-item.active { background: var(--accent-light); color: var(--accent); }
     .nav-item svg { flex-shrink: 0; }
     .nav-badge {
-      margin-left: auto;
-      background: var(--accent);
-      color: #fff;
-      font-size: 10px; font-weight: 700;
-      padding: 1px 6px; border-radius: 10px;
+      margin-left: auto; background: var(--accent); color: #fff;
+      font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 10px;
     }
-    .sidebar-footer {
-      padding: 12px;
-      border-top: 1px solid var(--border);
-    }
+    .sidebar-footer { padding: 12px; border-top: 1px solid var(--border); }
     .salon-info {
       display: flex; align-items: center; gap: 10px;
-      padding: 8px;
-      background: var(--bg);
-      border-radius: var(--radius);
+      padding: 8px; background: var(--bg); border-radius: var(--radius);
     }
     .salon-av {
-      width: 32px; height: 32px;
-      background: var(--accent);
-      border-radius: 50%;
+      width: 32px; height: 32px; background: var(--accent); border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      font-weight: 700; color: #fff; font-size: 11px;
-      flex-shrink: 0;
+      font-weight: 700; color: #fff; font-size: 11px; flex-shrink: 0;
     }
     .salon-av-info strong { font-size: 12px; display: block; }
     .salon-av-info small { font-size: 11px; color: var(--muted); }
@@ -116,24 +86,17 @@
     /* MAIN */
     .main { margin-left: 220px; flex: 1; display: flex; flex-direction: column; }
     .topbar {
-      height: 54px;
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      display: flex; align-items: center;
-      padding: 0 24px; gap: 12px;
+      height: 54px; background: var(--surface); border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; padding: 0 24px; gap: 12px;
       position: sticky; top: 0; z-index: 50;
     }
     .topbar-title { font-size: 15px; font-weight: 600; flex: 1; }
     .topbar-date { font-size: 12px; color: var(--muted); }
     .btn {
       display: inline-flex; align-items: center; gap: 6px;
-      padding: 7px 14px;
-      border-radius: var(--radius);
-      font-size: 13px; font-weight: 500;
-      cursor: pointer;
-      border: 1px solid transparent;
-      transition: all .1s;
-      font-family: inherit;
+      padding: 7px 14px; border-radius: var(--radius);
+      font-size: 13px; font-weight: 500; cursor: pointer;
+      border: 1px solid transparent; transition: all .1s; font-family: inherit;
     }
     .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
     .btn-primary:hover { opacity: .88; }
@@ -146,18 +109,8 @@
     .page.active { display: block; }
 
     /* KPI */
-    .kpi-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-      margin-bottom: 20px;
-    }
-    .kpi-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 14px 16px;
-    }
+    .kpi-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 20px; }
+    .kpi-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 14px 16px; }
     .kpi-label { font-size: 11px; color: var(--muted); font-weight: 500; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 6px; }
     .kpi-value { font-size: 26px; font-weight: 700; letter-spacing: -.5px; }
     .kpi-delta { font-size: 11px; font-weight: 600; margin-top: 4px; }
@@ -165,31 +118,14 @@
     .kpi-delta.down { color: var(--red); }
 
     /* CARDS */
-    .content-grid {
-      display: grid;
-      grid-template-columns: 1fr 300px;
-      gap: 16px;
-    }
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-    }
-    .card-header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 12px 16px;
-      border-bottom: 1px solid var(--border);
-    }
+    .content-grid { display: grid; grid-template-columns: 1fr 300px; gap: 16px; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+    .card-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid var(--border); }
     .card-title { font-size: 13px; font-weight: 600; }
     .card-body { padding: 14px 16px; }
 
     /* AGENDA */
-    .agenda-slot {
-      display: flex; align-items: center; gap: 12px;
-      padding: 9px 0;
-      border-bottom: 1px solid var(--border);
-    }
+    .agenda-slot { display: flex; align-items: center; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--border); }
     .agenda-slot:last-child { border-bottom: none; }
     .slot-time { font-size: 12px; font-weight: 600; color: var(--muted); width: 40px; flex-shrink: 0; }
     .slot-bar { width: 3px; height: 36px; border-radius: 2px; flex-shrink: 0; }
@@ -199,141 +135,64 @@
     .slot-price { font-size: 13px; font-weight: 600; white-space: nowrap; }
 
     /* BADGE */
-    .badge {
-      display: inline-block; font-size: 11px; font-weight: 600;
-      padding: 2px 7px; border-radius: 4px; white-space: nowrap;
-    }
+    .badge { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 7px; border-radius: 4px; white-space: nowrap; }
     .badge-green  { background: var(--green-light);  color: var(--green); }
     .badge-amber  { background: var(--amber-light);  color: var(--amber); }
     .badge-gray   { background: var(--bg); color: var(--muted); border: 1px solid var(--border); }
     .badge-red    { background: var(--red-light);    color: var(--red); }
     .badge-blue   { background: var(--accent-light); color: var(--accent); }
 
-    /* MINI CALENDAR */
+    /* MINI CALENDAR (sidebar) */
     .mini-cal { padding: 12px; }
-    .cal-nav {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 10px;
-    }
-    .cal-nav button {
-      border: 1px solid var(--border); background: var(--surface);
-      cursor: pointer; color: var(--muted); padding: 3px 9px;
-      border-radius: var(--radius); font-size: 14px; line-height: 1;
-    }
+    .cal-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .cal-nav button { border: 1px solid var(--border); background: var(--surface); cursor: pointer; color: var(--muted); padding: 3px 9px; border-radius: var(--radius); font-size: 14px; line-height: 1; }
     .cal-nav button:hover { background: var(--bg); }
     .cal-nav .cal-month { font-weight: 600; font-size: 13px; }
     .cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 1px; }
     .cal-day-name { text-align: center; font-size: 10px; font-weight: 600; color: var(--hint); padding: 4px 0; }
-    .cal-day {
-      text-align: center; padding: 5px 2px;
-      font-size: 12px; border-radius: 4px; cursor: pointer;
-      transition: .1s; position: relative;
-    }
+    .cal-day { text-align: center; padding: 5px 2px; font-size: 12px; border-radius: 4px; cursor: pointer; transition: .1s; position: relative; }
     .cal-day:hover { background: var(--bg); }
     .cal-day.today { background: var(--accent); color: #fff; font-weight: 700; }
-    .cal-day.has-event::after {
-      content: ''; position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%);
-      width: 3px; height: 3px; border-radius: 50%; background: var(--accent);
-    }
+    .cal-day.has-event::after { content: ''; position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); width: 3px; height: 3px; border-radius: 50%; background: var(--accent); }
     .cal-day.today.has-event::after { background: rgba(255,255,255,.7); }
     .cal-day.other-month { color: var(--hint); }
-    .cal-day.selected { outline: 2px solid var(--accent); color: var(--accent); font-weight: 700; }
 
     /* PROSSIMI */
-    .next-apt {
-      display: flex; align-items: center; gap: 10px;
-      padding: 8px 0;
-      border-bottom: 1px solid var(--border);
-    }
+    .next-apt { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
     .next-apt:last-child { border-bottom: none; }
-    .apt-av {
-      width: 30px; height: 30px; border-radius: 50%;
-      background: var(--accent-light); color: var(--accent);
-      display: flex; align-items: center; justify-content: center;
-      font-weight: 700; font-size: 11px; flex-shrink: 0;
-    }
+    .apt-av { width: 30px; height: 30px; border-radius: 50%; background: var(--accent-light); color: var(--accent); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 11px; flex-shrink: 0; }
     .apt-info { flex: 1; }
     .apt-name { font-size: 12px; font-weight: 600; }
     .apt-detail { font-size: 11px; color: var(--muted); }
     .apt-when { font-size: 11px; color: var(--muted); text-align: right; white-space: nowrap; }
 
     /* WEEK GRID */
-    .week-grid {
-      display: grid;
-      grid-template-columns: 50px repeat(6, 1fr);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      background: var(--surface);
-    }
-    .wg-header {
-      background: var(--surface);
-      padding: 10px 4px;
-      text-align: center;
-      font-size: 11px; font-weight: 600; color: var(--muted);
-      border-bottom: 2px solid var(--border);
-      border-right: 1px solid var(--border);
-    }
+    .week-grid { display: grid; grid-template-columns: 50px repeat(6,1fr); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; background: var(--surface); }
+    .wg-header { background: var(--surface); padding: 10px 4px; text-align: center; font-size: 11px; font-weight: 600; color: var(--muted); border-bottom: 2px solid var(--border); border-right: 1px solid var(--border); }
     .wg-header:last-child { border-right: none; }
     .wg-header.today-col { background: var(--accent-light); color: var(--accent); }
     .wg-header small { display: block; font-size: 17px; font-weight: 700; margin-bottom: 2px; color: inherit; }
-    .wg-time {
-      font-size: 10px; color: var(--hint); font-weight: 600;
-      padding: 6px 4px 0; height: 54px;
-      display: flex; align-items: flex-start;
-      border-right: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-    }
-    .wg-cell {
-      height: 54px;
-      border-right: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      position: relative; padding: 2px;
-    }
+    .wg-time { font-size: 10px; color: var(--hint); font-weight: 600; padding: 6px 4px 0; height: 54px; display: flex; align-items: flex-start; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .wg-cell { height: 54px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); position: relative; padding: 2px; }
     .wg-cell:last-child { border-right: none; }
-    .wg-apt {
-      position: absolute; top: 3px; left: 3px; right: 3px;
-      border-radius: 4px; padding: 3px 6px;
-      font-size: 10px; font-weight: 600; cursor: pointer;
-      line-height: 1.3; border-left: 3px solid;
-    }
+    .wg-apt { position: absolute; top: 3px; left: 3px; right: 3px; border-radius: 4px; padding: 3px 6px; font-size: 10px; font-weight: 600; cursor: pointer; line-height: 1.3; border-left: 3px solid; }
     .wg-apt:hover { filter: brightness(.96); }
-    /* Confermato = verde, In attesa = ambra — colore con significato */
-    .apt-confirmed { background: var(--green-light);  color: #15803d; border-color: var(--green); }
+    .apt-confirmed { background: var(--green-light); color: #15803d; border-color: var(--green); }
     .apt-pending   { background: var(--amber-light); color: #92400e; border-color: #d97706; }
 
-    /* CLIENTI */
+    /* CLIENTI TABLE */
     .search-bar { display: flex; gap: 10px; margin-bottom: 16px; }
-    .search-input {
-      flex: 1; padding: 8px 12px;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      font-size: 13px; color: var(--text);
-      background: var(--surface);
-      outline: none; transition: border .1s;
-      font-family: inherit;
-    }
+    .search-input { flex: 1; padding: 8px 12px; border: 1px solid var(--border); border-radius: var(--radius); font-size: 13px; color: var(--text); background: var(--surface); outline: none; transition: border .1s; font-family: inherit; }
     .search-input:focus { border-color: var(--accent); }
     .table-wrap { overflow-x: auto; }
     table { width: 100%; border-collapse: collapse; }
-    thead th {
-      text-align: left; padding: 9px 14px;
-      font-size: 11px; font-weight: 600; text-transform: uppercase;
-      letter-spacing: .05em; color: var(--muted);
-      border-bottom: 1px solid var(--border);
-      white-space: nowrap;
-    }
+    thead th { text-align: left; padding: 9px 14px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); border-bottom: 1px solid var(--border); white-space: nowrap; }
     tbody tr { border-bottom: 1px solid var(--border); }
     tbody tr:last-child { border-bottom: none; }
     tbody tr:hover td { background: var(--bg); }
     tbody td { padding: 10px 14px; font-size: 13px; }
     .client-cell { display: flex; align-items: center; gap: 10px; }
-    .client-av {
-      width: 28px; height: 28px; border-radius: 50%;
-      background: var(--accent-light); color: var(--accent);
-      display: flex; align-items: center; justify-content: center;
-      font-weight: 700; font-size: 11px; flex-shrink: 0;
-    }
+    .client-av { width: 28px; height: 28px; border-radius: 50%; background: var(--accent-light); color: var(--accent); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 11px; flex-shrink: 0; }
 
     /* STATISTICHE */
     .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
@@ -348,74 +207,167 @@
     .legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; }
     .legend-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
 
-    /* MODALE */
+    /* =============================================
+       MODALE NUOVA PRENOTAZIONE — layout visivo
+       ============================================= */
     .modal-backdrop {
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,.3);
-      z-index: 200;
-      display: flex; align-items: center; justify-content: center;
-      opacity: 0; pointer-events: none; transition: opacity .15s;
+      position: fixed; inset: 0; background: rgba(0,0,0,.35);
+      z-index: 200; display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity .18s; padding: 20px;
     }
     .modal-backdrop.open { opacity: 1; pointer-events: all; }
-    .modal {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      width: 440px; max-width: 95vw;
+
+    /* Modale grande per prenotazione */
+    .modal-np {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); width: 860px; max-width: 100%;
+      max-height: 90vh; display: flex; flex-direction: column;
+      box-shadow: 0 12px 40px rgba(0,0,0,.18);
+      transform: translateY(20px); transition: transform .18s;
+    }
+    .modal-backdrop.open .modal-np { transform: translateY(0); }
+
+    .modal-np-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 20px; border-bottom: 1px solid var(--border); flex-shrink: 0;
+    }
+    .modal-np-title { font-size: 15px; font-weight: 600; }
+    .modal-np-close {
+      width: 28px; height: 28px; border-radius: var(--radius);
+      border: 1px solid var(--border); background: var(--surface);
+      cursor: pointer; font-size: 14px; display: flex; align-items: center;
+      justify-content: center; color: var(--muted);
+    }
+    .modal-np-close:hover { background: var(--bg); }
+
+    .modal-np-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto auto;
+      gap: 0;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .np-section {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .np-section:nth-child(odd)  { border-right: 1px solid var(--border); }
+    .np-section:nth-last-child(-n+2) { border-bottom: none; }
+
+    .np-section-label {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .07em; color: var(--hint); margin-bottom: 10px;
+    }
+    .np-selected-info {
+      font-size: 11px; font-weight: 600; color: var(--accent);
+      margin-bottom: 8px; min-height: 16px;
+    }
+
+    /* Griglie di selezione */
+    .sel-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+    .sel-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+
+    .sel-chip {
+      padding: 9px 10px; border: 1px solid var(--border);
+      border-radius: var(--radius); cursor: pointer;
+      font-size: 12px; font-weight: 500;
+      transition: border-color .1s, background .1s, color .1s;
+      text-align: left; user-select: none;
+    }
+    .sel-chip:hover { border-color: var(--accent); background: var(--accent-light); color: var(--accent); }
+    .sel-chip.selected { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .sel-chip .chip-main { font-weight: 600; font-size: 13px; }
+    .sel-chip .chip-sub { font-size: 11px; opacity: .75; margin-top: 1px; }
+    .sel-chip.selected .chip-sub { opacity: .85; }
+
+    /* Calendario nella modale */
+    .np-cal-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .np-cal-nav button {
+      border: 1px solid var(--border); background: var(--surface); cursor: pointer;
+      color: var(--muted); padding: 4px 10px; border-radius: var(--radius); font-size: 14px; line-height: 1;
+    }
+    .np-cal-nav button:hover { background: var(--bg); }
+    .np-cal-month { font-size: 13px; font-weight: 600; }
+    .np-cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 3px; }
+    .np-cal-dh { text-align: center; font-size: 10px; font-weight: 700; color: var(--hint); padding: 4px 0; }
+    .np-cal-d {
+      aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+      font-size: 12px; border-radius: 4px; cursor: pointer; border: 1px solid transparent;
+      transition: .1s; user-select: none;
+    }
+    .np-cal-d:hover:not(.disabled):not(.other) { border-color: var(--accent); color: var(--accent); }
+    .np-cal-d.today { font-weight: 700; color: var(--accent); }
+    .np-cal-d.selected { background: var(--accent); color: #fff; font-weight: 700; }
+    .np-cal-d.today.selected { color: #fff; }
+    .np-cal-d.other { color: var(--hint); cursor: default; }
+    .np-cal-d.disabled { color: var(--border); cursor: default; }
+
+    /* Slot orario */
+    .time-chip {
+      padding: 8px 4px; border: 1px solid var(--border);
+      border-radius: var(--radius); cursor: pointer;
+      font-size: 12px; font-weight: 600; text-align: center;
+      transition: border-color .1s, background .1s, color .1s; user-select: none;
+    }
+    .time-chip:hover { border-color: var(--accent); background: var(--accent-light); color: var(--accent); }
+    .time-chip.selected { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+    /* Note e footer modale */
+    .modal-np-note {
+      padding: 12px 20px; border-top: 1px solid var(--border); flex-shrink: 0;
+    }
+    .modal-np-note label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--hint); display: block; margin-bottom: 6px; }
+    .modal-np-note input {
+      width: 100%; padding: 8px 10px; border: 1px solid var(--border);
+      border-radius: var(--radius); font-size: 13px; color: var(--text);
+      background: var(--surface); outline: none; font-family: inherit;
+    }
+    .modal-np-note input:focus { border-color: var(--accent); }
+
+    .modal-np-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 20px; border-top: 1px solid var(--border); flex-shrink: 0;
+    }
+    .modal-np-summary { font-size: 12px; color: var(--muted); }
+    .modal-np-summary strong { color: var(--text); }
+
+    /* Modale cliente (piccola, standard) */
+    .modal-sm {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); width: 420px; max-width: 95vw;
       box-shadow: 0 8px 32px rgba(0,0,0,.14);
       transform: translateY(16px); transition: transform .15s;
     }
-    .modal-backdrop.open .modal { transform: translateY(0); }
-    .modal-header {
-      padding: 14px 18px;
-      border-bottom: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: space-between;
-    }
+    .modal-backdrop.open .modal-sm { transform: translateY(0); }
+    .modal-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border-bottom: 1px solid var(--border); }
     .modal-title { font-size: 14px; font-weight: 600; }
-    .modal-close {
-      width: 26px; height: 26px; border-radius: var(--radius);
-      border: 1px solid var(--border); background: var(--surface);
-      cursor: pointer; font-size: 13px; display: flex;
-      align-items: center; justify-content: center; color: var(--muted);
-    }
+    .modal-close { width: 26px; height: 26px; border-radius: var(--radius); border: 1px solid var(--border); background: var(--surface); cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center; color: var(--muted); }
     .modal-close:hover { background: var(--bg); }
     .modal-body { padding: 16px 18px; }
     .modal-footer { padding: 12px 18px; border-top: 1px solid var(--border); display: flex; gap: 8px; justify-content: flex-end; }
     .form-row { margin-bottom: 12px; }
     .form-row label { display: block; font-size: 11px; font-weight: 600; margin-bottom: 4px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
-    .form-row input,
-    .form-row select {
-      width: 100%; padding: 8px 10px;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      font-size: 13px; color: var(--text);
-      background: var(--surface); outline: none; transition: border .1s;
-      font-family: inherit; -webkit-appearance: none;
-    }
-    .form-row input:focus,
-    .form-row select:focus { border-color: var(--accent); }
+    .form-row input, .form-row select { width: 100%; padding: 8px 10px; border: 1px solid var(--border); border-radius: var(--radius); font-size: 13px; color: var(--text); background: var(--surface); outline: none; transition: border .1s; font-family: inherit; -webkit-appearance: none; }
+    .form-row input:focus, .form-row select:focus { border-color: var(--accent); }
     .form-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
     /* TOAST */
     .toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 300; display: flex; flex-direction: column; gap: 6px; }
-    .toast {
-      background: var(--text); color: #fff;
-      padding: 10px 16px; border-radius: var(--radius);
-      font-size: 13px; font-weight: 500;
-      box-shadow: 0 4px 16px rgba(0,0,0,.18);
-      animation: slideIn .2s ease;
-    }
+    .toast { background: var(--text); color: #fff; padding: 10px 16px; border-radius: var(--radius); font-size: 13px; font-weight: 500; box-shadow: 0 4px 16px rgba(0,0,0,.18); animation: slideIn .2s ease; }
     .toast.success { background: var(--green); }
     .toast.error   { background: var(--red); }
     @keyframes slideIn { from { transform: translateX(50px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
     /* RESPONSIVE */
     @media (max-width: 900px) {
-      .sidebar { display: none; }
-      .main { margin-left: 0; }
+      .sidebar { display: none; } .main { margin-left: 0; }
       .kpi-grid { grid-template-columns: 1fr 1fr; }
       .content-grid { grid-template-columns: 1fr; }
       .stats-grid { grid-template-columns: 1fr; }
+      .modal-np-body { grid-template-columns: 1fr; }
+      .np-section:nth-child(odd) { border-right: none; }
     }
   </style>
 </head>
@@ -424,10 +376,7 @@
 <aside class="sidebar">
   <div class="sidebar-logo">
     <div class="logo-mark">S</div>
-    <div class="logo-text">
-      <strong>Salon Manager</strong>
-      <span>Demo</span>
-    </div>
+    <div class="logo-text"><strong>Salon Manager</strong><span>Demo</span></div>
   </div>
   <nav>
     <div class="nav-label">Principale</div>
@@ -452,10 +401,7 @@
   <div class="sidebar-footer">
     <div class="salon-info">
       <div class="salon-av">SB</div>
-      <div class="salon-av-info">
-        <strong>Salon Bella</strong>
-        <small>Via Roma 12, Padova</small>
-      </div>
+      <div class="salon-av-info"><strong>Salon Bella</strong><small>Via Roma 12, Padova</small></div>
     </div>
   </div>
 </aside>
@@ -464,9 +410,8 @@
   <div class="topbar">
     <div class="topbar-title" id="pageTitle">Dashboard</div>
     <div class="topbar-date" id="topbarDate"></div>
-    <button class="btn btn-primary" id="mainActionBtn" onclick="openModal('modalNuovaPrenotazione')">
-      + Nuova prenotazione
-    </button>
+    <!-- Bottone sempre presente in tutte le pagine -->
+    <button class="btn btn-primary" onclick="openNuovaPrenotazione()">+ Nuova prenotazione</button>
   </div>
 
   <!-- DASHBOARD -->
@@ -533,17 +478,10 @@
     <div class="card">
       <div class="table-wrap">
         <table>
-          <thead>
-            <tr>
-              <th>Cliente</th>
-              <th>Telefono</th>
-              <th>Ultimo servizio</th>
-              <th>Ultima visita</th>
-              <th>Spesa totale</th>
-              <th>Tipo</th>
-              <th></th>
-            </tr>
-          </thead>
+          <thead><tr>
+            <th>Cliente</th><th>Telefono</th><th>Ultimo servizio</th>
+            <th>Ultima visita</th><th>Spesa totale</th><th>Tipo</th><th></th>
+          </tr></thead>
           <tbody id="tableClienti"></tbody>
         </table>
       </div>
@@ -554,151 +492,103 @@
   <div class="page" id="page-statistiche">
     <p style="font-size:12px;color:var(--muted);margin-bottom:16px;">Riepilogo ultimi 30 giorni</p>
     <div class="kpi-grid" style="margin-bottom:16px;">
-      <div class="kpi-card">
-        <div class="kpi-label">Fatturato mensile</div>
-        <div class="kpi-value">€ 4.850</div>
-        <div class="kpi-delta up">+15% vs mese scorso</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-label">Appuntamenti totali</div>
-        <div class="kpi-value">78</div>
-        <div class="kpi-delta up">+6 vs mese scorso</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-label">Scontrino medio</div>
-        <div class="kpi-value">€ 62</div>
-        <div class="kpi-delta up">+5% vs mese scorso</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-label">Tasso di ritorno</div>
-        <div class="kpi-value">68%</div>
-        <div class="kpi-delta down">-1% vs mese scorso</div>
-      </div>
+      <div class="kpi-card"><div class="kpi-label">Fatturato mensile</div><div class="kpi-value">€ 4.850</div><div class="kpi-delta up">+15% vs mese scorso</div></div>
+      <div class="kpi-card"><div class="kpi-label">Appuntamenti totali</div><div class="kpi-value">78</div><div class="kpi-delta up">+6 vs mese scorso</div></div>
+      <div class="kpi-card"><div class="kpi-label">Scontrino medio</div><div class="kpi-value">€ 62</div><div class="kpi-delta up">+5% vs mese scorso</div></div>
+      <div class="kpi-card"><div class="kpi-label">Tasso di ritorno</div><div class="kpi-value">68%</div><div class="kpi-delta down">-1% vs mese scorso</div></div>
     </div>
     <div class="stats-grid">
-      <div class="card">
-        <div class="card-header"><div class="card-title">Servizi piu richiesti</div></div>
-        <div class="card-body"><div class="chart-bar-wrap" id="barServ"></div></div>
-      </div>
-      <div class="card">
-        <div class="card-header"><div class="card-title">Incasso per giorno della settimana</div></div>
-        <div class="card-body"><div class="chart-bar-wrap" id="barGiorni"></div></div>
-      </div>
-      <div class="card">
-        <div class="card-header"><div class="card-title">Fasce orarie piu affollate</div></div>
-        <div class="card-body"><div class="chart-bar-wrap" id="barOrari"></div></div>
-      </div>
-      <div class="card">
-        <div class="card-header"><div class="card-title">Tipologia clienti</div></div>
-        <div class="card-body">
-          <div class="donut-wrap">
-            <svg width="110" height="110" viewBox="0 0 110 110" id="donutSvg"></svg>
-            <div class="donut-legend" id="donutLegend"></div>
-          </div>
-        </div>
-      </div>
+      <div class="card"><div class="card-header"><div class="card-title">Servizi piu richiesti</div></div><div class="card-body"><div class="chart-bar-wrap" id="barServ"></div></div></div>
+      <div class="card"><div class="card-header"><div class="card-title">Incasso per giorno della settimana</div></div><div class="card-body"><div class="chart-bar-wrap" id="barGiorni"></div></div></div>
+      <div class="card"><div class="card-header"><div class="card-title">Fasce orarie piu affollate</div></div><div class="card-body"><div class="chart-bar-wrap" id="barOrari"></div></div></div>
+      <div class="card"><div class="card-header"><div class="card-title">Tipologia clienti</div></div><div class="card-body"><div class="donut-wrap"><svg width="110" height="110" viewBox="0 0 110 110" id="donutSvg"></svg><div class="donut-legend" id="donutLegend"></div></div></div></div>
     </div>
   </div>
 </div>
 
-<!-- MODALE NUOVA PRENOTAZIONE -->
-<div class="modal-backdrop" id="modalNuovaPrenotazione">
-  <div class="modal" onclick="event.stopPropagation()">
-    <div class="modal-header">
-      <div class="modal-title">Nuova prenotazione</div>
-      <button class="modal-close" onclick="closeModal('modalNuovaPrenotazione')">&#x2715;</button>
+<!-- =====================================================
+     MODALE NUOVA PRENOTAZIONE — layout visivo click
+     ===================================================== -->
+<div class="modal-backdrop" id="modalNuovaPrenotazione" onclick="chiudiNuovaPrenotazione(event)">
+  <div class="modal-np">
+
+    <div class="modal-np-header">
+      <div class="modal-np-title">Nuova prenotazione</div>
+      <button class="modal-np-close" onclick="closeModal('modalNuovaPrenotazione')">&#x2715;</button>
     </div>
-    <div class="modal-body">
-      <div class="form-row">
-        <label>Cliente</label>
-        <select id="np_cliente">
-          <option value="">Seleziona cliente...</option>
-          <option>Giulia Rossi</option>
-          <option>Marta Bianchi</option>
-          <option>Laura Conti</option>
-          <option>Sofia Greco</option>
-          <option>Elena Marini</option>
-          <option>Carla Neri</option>
-          <option>Francesca Rizzo</option>
-          <option>Anna Lombardi</option>
-        </select>
+
+    <div class="modal-np-body">
+
+      <!-- SEZIONE: Cliente -->
+      <div class="np-section">
+        <div class="np-section-label">1. Seleziona cliente</div>
+        <div class="np-selected-info" id="info-cliente">Nessun cliente selezionato</div>
+        <div class="sel-grid-2" id="grid-clienti"></div>
       </div>
-      <div class="form-row">
-        <label>Servizio</label>
-        <select id="np_servizio">
-          <option>Taglio e piega</option>
-          <option>Colorazione</option>
-          <option>Trattamento keratina</option>
-          <option>Permanente</option>
-          <option>Messa in piega</option>
-          <option>Balayage</option>
-          <option>Taglio bambino</option>
-        </select>
+
+      <!-- SEZIONE: Servizio -->
+      <div class="np-section">
+        <div class="np-section-label">2. Seleziona servizio</div>
+        <div class="np-selected-info" id="info-servizio">Nessun servizio selezionato</div>
+        <div class="sel-grid-2" id="grid-servizi"></div>
       </div>
-      <div class="form-2col">
-        <div class="form-row">
-          <label>Data</label>
-          <input type="date" id="np_data">
+
+      <!-- SEZIONE: Data (calendario mensile) -->
+      <div class="np-section">
+        <div class="np-section-label">3. Seleziona data</div>
+        <div class="np-selected-info" id="info-data">Nessuna data selezionata</div>
+        <div class="np-cal-nav">
+          <button onclick="npCalMove(-1)">&#8249;</button>
+          <span class="np-cal-month" id="np-cal-month"></span>
+          <button onclick="npCalMove(1)">&#8250;</button>
         </div>
-        <div class="form-row">
-          <label>Ora</label>
-          <select id="np_ora">
-            <option>09:00</option><option>09:30</option>
-            <option>10:00</option><option>10:30</option>
-            <option>11:00</option><option>11:30</option>
-            <option>12:00</option><option>14:00</option>
-            <option>14:30</option><option>15:00</option>
-            <option>15:30</option><option>16:00</option>
-            <option>16:30</option><option>17:00</option>
-          </select>
-        </div>
+        <div class="np-cal-grid" id="np-cal-grid"></div>
       </div>
-      <div class="form-row">
-        <label>Note (opzionale)</label>
-        <input type="text" placeholder="Allergie, preferenze colore..." id="np_note">
+
+      <!-- SEZIONE: Orario -->
+      <div class="np-section">
+        <div class="np-section-label">4. Seleziona orario</div>
+        <div class="np-selected-info" id="info-ora">Nessun orario selezionato</div>
+        <div class="sel-grid-3" id="grid-orari"></div>
+      </div>
+
+    </div><!-- /modal-np-body -->
+
+    <div class="modal-np-note">
+      <label>Note (opzionale)</label>
+      <input type="text" id="np_note" placeholder="Allergie, preferenze colore...">
+    </div>
+
+    <div class="modal-np-footer">
+      <div class="modal-np-summary" id="np-summary">Seleziona cliente, servizio, data e orario</div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-outline" onclick="closeModal('modalNuovaPrenotazione')">Annulla</button>
+        <button class="btn btn-primary" onclick="salvaPrenotazione()">Conferma prenotazione</button>
       </div>
     </div>
-    <div class="modal-footer">
-      <button class="btn btn-outline" onclick="closeModal('modalNuovaPrenotazione')">Annulla</button>
-      <button class="btn btn-primary" onclick="salvaPrenotazione()">Salva prenotazione</button>
-    </div>
+
   </div>
 </div>
 
 <!-- MODALE NUOVO CLIENTE -->
-<div class="modal-backdrop" id="modalNuovoCliente">
-  <div class="modal" onclick="event.stopPropagation()">
+<div class="modal-backdrop" id="modalNuovoCliente" onclick="if(event.target===this)closeModal('modalNuovoCliente')">
+  <div class="modal-sm" onclick="event.stopPropagation()">
     <div class="modal-header">
       <div class="modal-title">Nuovo cliente</div>
       <button class="modal-close" onclick="closeModal('modalNuovoCliente')">&#x2715;</button>
     </div>
     <div class="modal-body">
       <div class="form-2col">
-        <div class="form-row">
-          <label>Nome</label>
-          <input type="text" placeholder="Giulia" id="nc_nome">
-        </div>
-        <div class="form-row">
-          <label>Cognome</label>
-          <input type="text" placeholder="Rossi" id="nc_cognome">
-        </div>
+        <div class="form-row"><label>Nome</label><input type="text" placeholder="Giulia" id="nc_nome"></div>
+        <div class="form-row"><label>Cognome</label><input type="text" placeholder="Rossi" id="nc_cognome"></div>
       </div>
-      <div class="form-row">
-        <label>Telefono</label>
-        <input type="tel" placeholder="347 123 4567" id="nc_tel">
-      </div>
-      <div class="form-row">
-        <label>Email</label>
-        <input type="email" placeholder="giulia@email.com" id="nc_email">
-      </div>
+      <div class="form-row"><label>Telefono</label><input type="tel" placeholder="347 123 4567" id="nc_tel"></div>
+      <div class="form-row"><label>Email</label><input type="email" placeholder="giulia@email.com" id="nc_email"></div>
       <div class="form-row">
         <label>Servizio preferito</label>
         <select id="nc_servizio">
-          <option>Taglio e piega</option>
-          <option>Colorazione</option>
-          <option>Trattamento keratina</option>
-          <option>Balayage</option>
-          <option>Messa in piega</option>
+          <option>Taglio e piega</option><option>Colorazione</option>
+          <option>Trattamento keratina</option><option>Balayage</option><option>Messa in piega</option>
         </select>
       </div>
     </div>
@@ -712,18 +602,7 @@
 <div class="toast-container" id="toastContainer"></div>
 
 <script>
-/* DATI DEMO */
-const agendaData = [
-  { ora:'09:00', nome:'Giulia Rossi',    servizio:'Taglio e piega',      prezzo:'€ 45',  status:'ok' },
-  { ora:'09:30', nome:'Marta Bianchi',   servizio:'Colorazione',          prezzo:'€ 80',  status:'ok' },
-  { ora:'10:30', nome:'Laura Conti',     servizio:'Trattamento keratina', prezzo:'€ 120', status:'attesa' },
-  { ora:'11:30', nome:'Sofia Greco',     servizio:'Balayage',             prezzo:'€ 90',  status:'ok' },
-  { ora:'12:00', nome:'',               servizio:'Slot libero',          prezzo:'',      status:'libero' },
-  { ora:'14:00', nome:'Elena Marini',    servizio:'Messa in piega',       prezzo:'€ 30',  status:'ok' },
-  { ora:'15:30', nome:'Carla Neri',      servizio:'Taglio e piega',       prezzo:'€ 45',  status:'attesa' },
-  { ora:'17:00', nome:'Anna Lombardi',   servizio:'Colorazione',          prezzo:'€ 75',  status:'ok' },
-];
-
+/* ---- DATI ---- */
 const clientiData = [
   { nome:'Giulia Rossi',    tel:'347 123 4567', servizio:'Taglio e piega',       ultima:'15 Mar 2026', spesa:'€ 320', tag:'fedele' },
   { nome:'Marta Bianchi',   tel:'328 987 6543', servizio:'Colorazione',           ultima:'22 Mar 2026', spesa:'€ 510', tag:'vip' },
@@ -735,13 +614,39 @@ const clientiData = [
   { nome:'Anna Lombardi',   tel:'340 777 8888', servizio:'Colorazione',           ultima:'27 Mar 2026', spesa:'€ 640', tag:'vip' },
 ];
 
-const prossimiData = [
-  { nome:'Sofia Greco',  servizio:'Balayage',      giorno:'Domani',     ora:'09:00' },
-  { nome:'Elena Marini', servizio:'Messa in piega',giorno:'Domani',     ora:'11:30' },
-  { nome:'Giulia Rossi', servizio:'Taglio',        giorno:'Dopodomani', ora:'10:00' },
+const serviziData = [
+  { nome:'Taglio e piega',      durata:'60 min', prezzo:'€ 45' },
+  { nome:'Colorazione',         durata:'90 min', prezzo:'€ 80' },
+  { nome:'Balayage',            durata:'120 min', prezzo:'€ 90' },
+  { nome:'Trattamento keratina',durata:'90 min', prezzo:'€ 120' },
+  { nome:'Messa in piega',      durata:'30 min', prezzo:'€ 30' },
+  { nome:'Permanente',          durata:'120 min', prezzo:'€ 70' },
+  { nome:'Taglio bambino',      durata:'30 min', prezzo:'€ 20' },
+  { nome:'Trattamento colore',  durata:'60 min', prezzo:'€ 55' },
 ];
 
-/* giorno: indice 0=Lun…5=Sab, ora: indice slot, c: classe stile */
+const orariDisponibili = [
+  '09:00','09:30','10:00','10:30','11:00','11:30',
+  '12:00','14:00','14:30','15:00','15:30','16:00','16:30','17:00'
+];
+
+const agendaData = [
+  { ora:'09:00', nome:'Giulia Rossi',    servizio:'Taglio e piega',      prezzo:'€ 45',  status:'ok' },
+  { ora:'09:30', nome:'Marta Bianchi',   servizio:'Colorazione',          prezzo:'€ 80',  status:'ok' },
+  { ora:'10:30', nome:'Laura Conti',     servizio:'Trattamento keratina', prezzo:'€ 120', status:'attesa' },
+  { ora:'11:30', nome:'Sofia Greco',     servizio:'Balayage',             prezzo:'€ 90',  status:'ok' },
+  { ora:'12:00', nome:'',               servizio:'Slot libero',          prezzo:'',      status:'libero' },
+  { ora:'14:00', nome:'Elena Marini',    servizio:'Messa in piega',       prezzo:'€ 30',  status:'ok' },
+  { ora:'15:30', nome:'Carla Neri',      servizio:'Taglio e piega',       prezzo:'€ 45',  status:'attesa' },
+  { ora:'17:00', nome:'Anna Lombardi',   servizio:'Colorazione',          prezzo:'€ 75',  status:'ok' },
+];
+
+const prossimiData = [
+  { nome:'Sofia Greco',  servizio:'Balayage',       giorno:'Domani',     ora:'09:00' },
+  { nome:'Elena Marini', servizio:'Messa in piega', giorno:'Domani',     ora:'11:30' },
+  { nome:'Giulia Rossi', servizio:'Taglio',         giorno:'Dopodomani', ora:'10:00' },
+];
+
 const weekData = [
   { giorno:0, ora:0, nome:'Giulia R.',    servizio:'Taglio',      c:'apt-confirmed' },
   { giorno:0, ora:2, nome:'Marta B.',     servizio:'Colorazione', c:'apt-confirmed' },
@@ -757,7 +662,7 @@ const weekData = [
   { giorno:5, ora:2, nome:'Laura C.',     servizio:'Colorazione', c:'apt-confirmed' },
 ];
 
-/* NAVIGAZIONE */
+/* ---- NAVIGAZIONE ---- */
 function goTo(page, el) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -765,28 +670,15 @@ function goTo(page, el) {
   if (el) el.classList.add('active');
   const titles = { dashboard:'Dashboard', prenotazioni:'Prenotazioni', clienti:'Clienti', statistiche:'Statistiche' };
   document.getElementById('pageTitle').textContent = titles[page] || page;
-  const btn = document.getElementById('mainActionBtn');
-  if (page === 'clienti') {
-    btn.textContent = '+ Nuovo cliente';
-    btn.onclick = () => openModal('modalNuovoCliente');
-  } else if (page === 'statistiche') {
-    btn.textContent = 'Esporta report';
-    btn.onclick = () => showToast('Report esportato in PDF', 'success');
-  } else {
-    btn.textContent = '+ Nuova prenotazione';
-    btn.onclick = () => openModal('modalNuovaPrenotazione');
-  }
 }
 
-/* DATA TOPBAR */
+/* ---- DATA TOPBAR ---- */
 function aggiornaData() {
-  const oggi = new Date();
   document.getElementById('topbarDate').textContent =
-    oggi.toLocaleDateString('it-IT', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
-  document.getElementById('np_data').value = oggi.toISOString().split('T')[0];
+    new Date().toLocaleDateString('it-IT', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
 }
 
-/* AGENDA */
+/* ---- AGENDA ---- */
 function renderAgenda() {
   const statusMap   = { ok:'badge-green', attesa:'badge-amber', libero:'badge-gray' };
   const statusLabel = { ok:'Confermato',  attesa:'In attesa',   libero:'Libero' };
@@ -805,7 +697,7 @@ function renderAgenda() {
   `).join('');
 }
 
-/* MINI CALENDARIO */
+/* ---- MINI CALENDARIO (sidebar) ---- */
 let calDate = new Date();
 function renderMiniCal() {
   const today = new Date();
@@ -815,7 +707,6 @@ function renderMiniCal() {
   const monthNames = ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
   const dayNames = ['Lu','Ma','Me','Gi','Ve','Sa','Do'];
   const hasPren = [3,7,8,10,12,14,15,17,19,21,22,24,25,28,29];
-
   let html = `
     <div class="cal-nav">
       <button onclick="calMove(-1)">&#8249;</button>
@@ -829,18 +720,14 @@ function renderMiniCal() {
   for (let i = 0; i < startEmpty; i++) html += `<div class="cal-day other-month"></div>`;
   for (let d = 1; d <= daysInMonth; d++) {
     const isToday = d === today.getDate() && m === today.getMonth() && y === today.getFullYear();
-    const hasPr = hasPren.includes(d);
-    html += `<div class="cal-day${isToday?' today':''}${hasPr?' has-event':''}">${d}</div>`;
+    html += `<div class="cal-day${isToday?' today':''}${hasPren.includes(d)?' has-event':''}">${d}</div>`;
   }
   html += `</div>`;
   document.getElementById('miniCal').innerHTML = html;
 }
-function calMove(dir) {
-  calDate.setMonth(calDate.getMonth() + dir);
-  renderMiniCal();
-}
+function calMove(dir) { calDate.setMonth(calDate.getMonth() + dir); renderMiniCal(); }
 
-/* PROSSIMI */
+/* ---- PROSSIMI ---- */
 function renderProssimi() {
   document.getElementById('prossimiApt').innerHTML = prossimiData.map(a => `
     <div class="next-apt">
@@ -849,15 +736,12 @@ function renderProssimi() {
         <div class="apt-name">${a.nome}</div>
         <div class="apt-detail">${a.servizio}</div>
       </div>
-      <div class="apt-when">
-        <span>${a.giorno}</span>
-        <span>${a.ora}</span>
-      </div>
+      <div class="apt-when"><span>${a.giorno}</span><span>${a.ora}</span></div>
     </div>
   `).join('');
 }
 
-/* VISTA SETTIMANALE */
+/* ---- VISTA SETTIMANALE ---- */
 function renderWeek() {
   const oggi = new Date();
   const lun = new Date(oggi);
@@ -865,11 +749,10 @@ function renderWeek() {
   const giorni = ['Lun','Mar','Mer','Gio','Ven','Sab'];
   const ore = ['09:00','10:00','11:00','12:00','15:00','16:00','17:00'];
   const todayIdx = oggi.getDay() === 0 ? 6 : oggi.getDay() - 1;
-
   let html = '<div class="wg-header"></div>';
   for (let g = 0; g < 6; g++) {
     const d = new Date(lun); d.setDate(lun.getDate() + g);
-    html += `<div class="wg-header${g === todayIdx ? ' today-col' : ''}"><small>${d.getDate()}</small>${giorni[g]}</div>`;
+    html += `<div class="wg-header${g===todayIdx?' today-col':''}"><small>${d.getDate()}</small>${giorni[g]}</div>`;
   }
   for (let o = 0; o < ore.length; o++) {
     html += `<div class="wg-time">${ore[o]}</div>`;
@@ -883,7 +766,7 @@ function renderWeek() {
   document.getElementById('weekGrid').innerHTML = html;
 }
 
-/* TABELLA CLIENTI */
+/* ---- TABELLA CLIENTI ---- */
 let clientiList = [...clientiData];
 function renderClienti(data) {
   const tagLabel = { fedele:'Fedele', nuova:'Nuova', vip:'VIP' };
@@ -900,7 +783,7 @@ function renderClienti(data) {
       <td style="font-weight:600">${c.spesa}</td>
       <td><span class="badge ${tagClass[c.tag]}">${tagLabel[c.tag]}</span></td>
       <td style="display:flex;gap:6px;justify-content:flex-end;">
-        <button class="btn btn-outline btn-sm" onclick="openModal('modalNuovaPrenotazione')">Prenota</button>
+        <button class="btn btn-outline btn-sm" onclick="openNuovaPrenotazione()">Prenota</button>
         <button class="btn btn-danger btn-sm" onclick="showToast('Cliente eliminato','error')">Elimina</button>
       </td>
     </tr>
@@ -913,89 +796,204 @@ function filtraClienti(q) {
   ));
 }
 
-/* STATISTICHE */
+/* ---- STATISTICHE ---- */
 function renderBarre(id, items, cssColor) {
   const max = Math.max(...items.map(i => i.val));
   document.getElementById(id).innerHTML = items.map(item => `
     <div class="chart-bar-row">
       <div class="bar-label">${item.label}</div>
-      <div class="bar-track">
-        <div class="bar-fill" style="width:${(item.val/max*100).toFixed(0)}%;background:${cssColor}"></div>
-      </div>
+      <div class="bar-track"><div class="bar-fill" style="width:${(item.val/max*100).toFixed(0)}%;background:${cssColor}"></div></div>
       <div class="bar-val">${item.val}${item.suffix||''}</div>
     </div>
   `).join('');
 }
-
 function renderStatistiche() {
-  /* Servizi: blu (incasso/volume) */
   renderBarre('barServ', [
-    { label:'Taglio & piega', val:34 },
-    { label:'Colorazione',   val:22 },
-    { label:'Balayage',      val:11 },
-    { label:'Keratina',      val:7 },
-    { label:'Piega',         val:4 },
+    {label:'Taglio & piega',val:34},{label:'Colorazione',val:22},
+    {label:'Balayage',val:11},{label:'Keratina',val:7},{label:'Piega',val:4},
   ], 'var(--accent)');
-
-  /* Incasso per giorno: verde (ricavi) */
   renderBarre('barGiorni', [
-    { label:'Lunedi',    val:420, suffix:'€' },
-    { label:'Martedi',   val:610, suffix:'€' },
-    { label:'Mercoledi', val:580, suffix:'€' },
-    { label:'Giovedi',   val:730, suffix:'€' },
-    { label:'Venerdi',   val:890, suffix:'€' },
-    { label:'Sabato',    val:620, suffix:'€' },
+    {label:'Lunedi',val:420,suffix:'€'},{label:'Martedi',val:610,suffix:'€'},
+    {label:'Mercoledi',val:580,suffix:'€'},{label:'Giovedi',val:730,suffix:'€'},
+    {label:'Venerdi',val:890,suffix:'€'},{label:'Sabato',val:620,suffix:'€'},
   ], 'var(--green)');
-
-  /* Fasce orarie: blu */
   renderBarre('barOrari', [
-    { label:'09:00–11:00', val:28 },
-    { label:'11:00–13:00', val:18 },
-    { label:'14:00–16:00', val:20 },
-    { label:'16:00–18:00', val:12 },
+    {label:'09:00–11:00',val:28},{label:'11:00–13:00',val:18},
+    {label:'14:00–16:00',val:20},{label:'16:00–18:00',val:12},
   ], 'var(--accent)');
-
-  /* Donut: colori semantici — blu=VIP, verde=fedeli, ambra=nuove */
   const segments = [
-    { label:'Clienti VIP',    perc:22, color:'var(--accent)' },
-    { label:'Clienti fedeli', perc:48, color:'var(--green)' },
-    { label:'Nuove clienti',  perc:30, color:'#d97706' },
+    {label:'Clienti VIP',perc:22,color:'var(--accent)'},
+    {label:'Clienti fedeli',perc:48,color:'var(--green)'},
+    {label:'Nuove clienti',perc:30,color:'#d97706'},
   ];
-  const cx = 55, cy = 55, r = 38, stroke = 18;
-  const circ = 2 * Math.PI * r;
-  let offset = 0, svgPaths = '';
+  const cx=55,cy=55,r=38,stroke=18,circ=2*Math.PI*r;
+  let offset=0, svgPaths='';
   segments.forEach(s => {
-    const dash = circ * s.perc / 100;
+    const dash = circ*s.perc/100;
     svgPaths += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${s.color}" stroke-width="${stroke}" stroke-dasharray="${dash} ${circ-dash}" stroke-dashoffset="${-offset}" transform="rotate(-90 ${cx} ${cy})"/>`;
     offset += dash;
   });
   document.getElementById('donutSvg').innerHTML = svgPaths;
   document.getElementById('donutLegend').innerHTML = segments.map(s => `
-    <div class="legend-item">
-      <div class="legend-dot" style="background:${s.color}"></div>
-      <div><strong>${s.perc}%</strong> ${s.label}</div>
+    <div class="legend-item"><div class="legend-dot" style="background:${s.color}"></div><div><strong>${s.perc}%</strong> ${s.label}</div></div>
+  `).join('');
+}
+
+/* ======================================================
+   MODALE NUOVA PRENOTAZIONE — logica selezione visiva
+   ====================================================== */
+let npCliente = null;
+let npServizio = null;
+let npData    = null;
+let npOra     = null;
+let npCalDate = new Date();
+
+function openNuovaPrenotazione() {
+  /* Reset selezioni */
+  npCliente = null; npServizio = null; npData = null; npOra = null;
+  npCalDate = new Date();
+  document.getElementById('np_note').value = '';
+  buildGrigliaClienti();
+  buildGrigliaServizi();
+  buildGrigliaOrari();
+  buildNpCalendario();
+  aggiornaSummary();
+  document.getElementById('modalNuovaPrenotazione').classList.add('open');
+}
+
+function chiudiNuovaPrenotazione(e) {
+  if (e.target === document.getElementById('modalNuovaPrenotazione')) closeModal('modalNuovaPrenotazione');
+}
+
+/* Griglia clienti */
+function buildGrigliaClienti() {
+  const grid = document.getElementById('grid-clienti');
+  grid.innerHTML = clientiData.map((c, i) => `
+    <div class="sel-chip" id="chip-c-${i}" onclick="selCliente(${i})">
+      <div class="chip-main">${c.nome}</div>
+      <div class="chip-sub">${c.servizio}</div>
     </div>
   `).join('');
 }
 
-/* MODALI */
+function selCliente(i) {
+  npCliente = clientiData[i];
+  document.querySelectorAll('[id^="chip-c-"]').forEach(el => el.classList.remove('selected'));
+  document.getElementById('chip-c-' + i).classList.add('selected');
+  document.getElementById('info-cliente').textContent = npCliente.nome;
+  aggiornaSummary();
+}
+
+/* Griglia servizi */
+function buildGrigliaServizi() {
+  const grid = document.getElementById('grid-servizi');
+  grid.innerHTML = serviziData.map((s, i) => `
+    <div class="sel-chip" id="chip-s-${i}" onclick="selServizio(${i})">
+      <div class="chip-main">${s.nome}</div>
+      <div class="chip-sub">${s.durata} — ${s.prezzo}</div>
+    </div>
+  `).join('');
+}
+
+function selServizio(i) {
+  npServizio = serviziData[i];
+  document.querySelectorAll('[id^="chip-s-"]').forEach(el => el.classList.remove('selected'));
+  document.getElementById('chip-s-' + i).classList.add('selected');
+  document.getElementById('info-servizio').textContent = `${npServizio.nome} — ${npServizio.prezzo}`;
+  aggiornaSummary();
+}
+
+/* Griglia orari */
+function buildGrigliaOrari() {
+  const grid = document.getElementById('grid-orari');
+  grid.innerHTML = orariDisponibili.map((o, i) => `
+    <div class="time-chip" id="chip-o-${i}" onclick="selOra('${o}', ${i})">${o}</div>
+  `).join('');
+}
+
+function selOra(ora, i) {
+  npOra = ora;
+  document.querySelectorAll('[id^="chip-o-"]').forEach(el => el.classList.remove('selected'));
+  document.getElementById('chip-o-' + i).classList.add('selected');
+  document.getElementById('info-ora').textContent = ora;
+  aggiornaSummary();
+}
+
+/* Calendario modale */
+const MESI = ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
+const GIORNI_SHORT = ['Lu','Ma','Me','Gi','Ve','Sa','Do'];
+
+function buildNpCalendario() {
+  const today = new Date(); today.setHours(0,0,0,0);
+  const y = npCalDate.getFullYear(), m = npCalDate.getMonth();
+  const firstDay = new Date(y, m, 1).getDay();
+  const daysInMonth = new Date(y, m + 1, 0).getDate();
+  document.getElementById('np-cal-month').textContent = `${MESI[m]} ${y}`;
+  let html = GIORNI_SHORT.map(d => `<div class="np-cal-dh">${d}</div>`).join('');
+  const startEmpty = firstDay === 0 ? 6 : firstDay - 1;
+  for (let i = 0; i < startEmpty; i++) html += `<div class="np-cal-d other"></div>`;
+  for (let d = 1; d <= daysInMonth; d++) {
+    const date = new Date(y, m, d);
+    const isPast = date < today;
+    const isToday = date.getTime() === today.getTime();
+    const isSel = npData && date.getTime() === npData.getTime();
+    let cls = 'np-cal-d';
+    if (isPast) cls += ' disabled';
+    else if (isSel) cls += ' selected';
+    else if (isToday) cls += ' today';
+    const onclick = isPast ? '' : `onclick="selData(${y},${m},${d})"`;
+    html += `<div class="${cls}" ${onclick}>${d}</div>`;
+  }
+  document.getElementById('np-cal-grid').innerHTML = html;
+}
+
+function npCalMove(dir) {
+  npCalDate.setMonth(npCalDate.getMonth() + dir);
+  buildNpCalendario();
+}
+
+function selData(y, m, d) {
+  npData = new Date(y, m, d);
+  buildNpCalendario();
+  const label = npData.toLocaleDateString('it-IT', { weekday:'long', day:'numeric', month:'long' });
+  document.getElementById('info-data').textContent = label;
+  aggiornaSummary();
+}
+
+/* Summary footer */
+function aggiornaSummary() {
+  const parts = [];
+  if (npCliente)  parts.push(npCliente.nome);
+  if (npServizio) parts.push(npServizio.nome);
+  if (npData)     parts.push(npData.toLocaleDateString('it-IT', {day:'numeric',month:'short'}));
+  if (npOra)      parts.push(npOra);
+  const el = document.getElementById('np-summary');
+  if (parts.length === 4) {
+    el.innerHTML = `<strong>${parts[0]}</strong> — ${parts[1]} — <strong>${parts[2]}</strong> alle <strong>${parts[3]}</strong>`;
+  } else {
+    el.textContent = parts.length === 0
+      ? 'Seleziona cliente, servizio, data e orario'
+      : parts.join(' — ') + ' — seleziona ancora ' + (4 - parts.length) + ' elemento/i';
+  }
+}
+
+/* Salva prenotazione */
+function salvaPrenotazione() {
+  if (!npCliente)  { showToast('Seleziona un cliente',  'error'); return; }
+  if (!npServizio) { showToast('Seleziona un servizio', 'error'); return; }
+  if (!npData)     { showToast('Seleziona una data',    'error'); return; }
+  if (!npOra)      { showToast('Seleziona un orario',   'error'); return; }
+  const dataFmt = npData.toLocaleDateString('it-IT', { day:'numeric', month:'long', year:'numeric' });
+  closeModal('modalNuovaPrenotazione');
+  showToast(`Prenotazione confermata: ${npCliente.nome} — ${npServizio.nome} — ${dataFmt} alle ${npOra}`, 'success');
+}
+
+/* ---- MODALE CLIENTE ---- */
 function openModal(id) {
-  const el = document.getElementById(id);
-  el.classList.add('open');
-  el.onclick = (e) => { if (e.target === el) closeModal(id); };
+  document.getElementById(id).classList.add('open');
 }
 function closeModal(id) {
   document.getElementById(id).classList.remove('open');
-}
-
-function salvaPrenotazione() {
-  const cliente = document.getElementById('np_cliente').value;
-  const servizio = document.getElementById('np_servizio').value;
-  const data = document.getElementById('np_data').value;
-  const ora = document.getElementById('np_ora').value;
-  if (!cliente) { showToast('Seleziona un cliente', 'error'); return; }
-  closeModal('modalNuovaPrenotazione');
-  showToast(`Prenotazione salvata: ${cliente} — ${servizio} — ${data} alle ${ora}`, 'success');
 }
 
 function salvaCliente() {
@@ -1003,12 +1001,9 @@ function salvaCliente() {
   const cognome = document.getElementById('nc_cognome').value.trim();
   if (!nome || !cognome) { showToast('Inserisci nome e cognome', 'error'); return; }
   const nuovo = {
-    nome: `${nome} ${cognome}`,
-    tel: document.getElementById('nc_tel').value || '—',
+    nome: `${nome} ${cognome}`, tel: document.getElementById('nc_tel').value || '—',
     servizio: document.getElementById('nc_servizio').value,
-    ultima: 'Oggi',
-    spesa: '€ 0',
-    tag: 'nuova'
+    ultima: 'Oggi', spesa: '€ 0', tag: 'nuova'
   };
   clientiList.unshift(nuovo);
   renderClienti(clientiList);
@@ -1016,20 +1011,20 @@ function salvaCliente() {
   showToast(`Cliente ${nome} ${cognome} aggiunto`, 'success');
 }
 
-/* TOAST */
+/* ---- TOAST ---- */
 function showToast(msg, type = 'info') {
   const cont = document.getElementById('toastContainer');
   const t = document.createElement('div');
-  t.className = `toast${type === 'success' ? ' success' : type === 'error' ? ' error' : ''}`;
+  t.className = `toast${type==='success'?' success':type==='error'?' error':''}`;
   t.textContent = msg;
   cont.appendChild(t);
   setTimeout(() => {
-    t.style.opacity = '0'; t.style.transform = 'translateX(50px)'; t.style.transition = '.3s';
-    setTimeout(() => t.remove(), 320);
-  }, 3000);
+    t.style.opacity='0'; t.style.transform='translateX(50px)'; t.style.transition='.3s';
+    setTimeout(()=>t.remove(), 320);
+  }, 3500);
 }
 
-/* INIT */
+/* ---- INIT ---- */
 aggiornaData();
 renderAgenda();
 renderMiniCal();
