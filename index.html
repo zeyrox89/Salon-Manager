@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Salon Manager</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -201,15 +203,13 @@
     .bar-label { font-size: 12px; color: var(--muted); width: 90px; flex-shrink: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .bar-track { flex: 1; height: 8px; background: var(--bg); border-radius: 4px; overflow: hidden; border: 1px solid var(--border); }
     .bar-fill { height: 100%; border-radius: 4px; transition: width .5s ease; }
-    .bar-val { font-size: 12px; font-weight: 600; width: 44px; text-align: right; color: var(--text); flex-shrink: 0; }
+    .bar-val { font-size: 12px; font-weight: 600; width: 60px; text-align: right; color: var(--text); flex-shrink: 0; }
     .donut-wrap { display: flex; align-items: center; justify-content: center; gap: 24px; }
     .donut-legend { display: flex; flex-direction: column; gap: 10px; }
     .legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; }
     .legend-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
 
-    /* =============================================
-       MODALE NUOVA PRENOTAZIONE — layout visivo
-       ============================================= */
+    /* MODALE NUOVA PRENOTAZIONE */
     .modal-backdrop {
       position: fixed; inset: 0; background: rgba(0,0,0,.35);
       z-index: 200; display: flex; align-items: center; justify-content: center;
@@ -217,7 +217,6 @@
     }
     .modal-backdrop.open { opacity: 1; pointer-events: all; }
 
-    /* Modale grande per prenotazione */
     .modal-np {
       background: var(--surface); border: 1px solid var(--border);
       border-radius: var(--radius-lg); width: 860px; max-width: 100%;
@@ -241,39 +240,20 @@
     .modal-np-close:hover { background: var(--bg); }
 
     .modal-np-body {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: auto auto;
-      gap: 0;
-      overflow-y: auto;
-      flex: 1;
+      display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto auto;
+      gap: 0; overflow-y: auto; flex: 1;
     }
-
-    .np-section {
-      padding: 16px 20px;
-      border-bottom: 1px solid var(--border);
-    }
+    .np-section { padding: 16px 20px; border-bottom: 1px solid var(--border); }
     .np-section:nth-child(odd)  { border-right: 1px solid var(--border); }
     .np-section:nth-last-child(-n+2) { border-bottom: none; }
+    .np-section-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--hint); margin-bottom: 10px; }
+    .np-selected-info { font-size: 11px; font-weight: 600; color: var(--accent); margin-bottom: 8px; min-height: 16px; }
 
-    .np-section-label {
-      font-size: 10px; font-weight: 700; text-transform: uppercase;
-      letter-spacing: .07em; color: var(--hint); margin-bottom: 10px;
-    }
-    .np-selected-info {
-      font-size: 11px; font-weight: 600; color: var(--accent);
-      margin-bottom: 8px; min-height: 16px;
-    }
-
-    /* Griglie di selezione */
     .sel-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
     .sel-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
-
     .sel-chip {
-      padding: 9px 10px; border: 1px solid var(--border);
-      border-radius: var(--radius); cursor: pointer;
-      font-size: 12px; font-weight: 500;
-      transition: border-color .1s, background .1s, color .1s;
+      padding: 9px 10px; border: 1px solid var(--border); border-radius: var(--radius); cursor: pointer;
+      font-size: 12px; font-weight: 500; transition: border-color .1s, background .1s, color .1s;
       text-align: left; user-select: none;
     }
     .sel-chip:hover { border-color: var(--accent); background: var(--accent-light); color: var(--accent); }
@@ -282,12 +262,8 @@
     .sel-chip .chip-sub { font-size: 11px; opacity: .75; margin-top: 1px; }
     .sel-chip.selected .chip-sub { opacity: .85; }
 
-    /* Calendario nella modale */
     .np-cal-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-    .np-cal-nav button {
-      border: 1px solid var(--border); background: var(--surface); cursor: pointer;
-      color: var(--muted); padding: 4px 10px; border-radius: var(--radius); font-size: 14px; line-height: 1;
-    }
+    .np-cal-nav button { border: 1px solid var(--border); background: var(--surface); cursor: pointer; color: var(--muted); padding: 4px 10px; border-radius: var(--radius); font-size: 14px; line-height: 1; }
     .np-cal-nav button:hover { background: var(--bg); }
     .np-cal-month { font-size: 13px; font-weight: 600; }
     .np-cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 3px; }
@@ -304,27 +280,22 @@
     .np-cal-d.other { color: var(--hint); cursor: default; }
     .np-cal-d.disabled { color: var(--border); cursor: default; }
 
-    /* Slot orario */
     .time-chip {
-      padding: 8px 4px; border: 1px solid var(--border);
-      border-radius: var(--radius); cursor: pointer;
+      padding: 8px 4px; border: 1px solid var(--border); border-radius: var(--radius); cursor: pointer;
       font-size: 12px; font-weight: 600; text-align: center;
       transition: border-color .1s, background .1s, color .1s; user-select: none;
     }
     .time-chip:hover { border-color: var(--accent); background: var(--accent-light); color: var(--accent); }
     .time-chip.selected { background: var(--accent); color: #fff; border-color: var(--accent); }
 
-    /* Note e footer modale */
-    .modal-np-note {
-      padding: 12px 20px; border-top: 1px solid var(--border); flex-shrink: 0;
-    }
+    .modal-np-note { padding: 12px 20px; border-top: 1px solid var(--border); flex-shrink: 0; }
     .modal-np-note label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--hint); display: block; margin-bottom: 6px; }
-    .modal-np-note input {
+    .modal-np-note input, .modal-np-note select {
       width: 100%; padding: 8px 10px; border: 1px solid var(--border);
       border-radius: var(--radius); font-size: 13px; color: var(--text);
       background: var(--surface); outline: none; font-family: inherit;
     }
-    .modal-np-note input:focus { border-color: var(--accent); }
+    .modal-np-note input:focus, .modal-np-note select:focus { border-color: var(--accent); }
 
     .modal-np-footer {
       display: flex; align-items: center; justify-content: space-between;
@@ -333,7 +304,7 @@
     .modal-np-summary { font-size: 12px; color: var(--muted); }
     .modal-np-summary strong { color: var(--text); }
 
-    /* Modale cliente (piccola, standard) */
+    /* Modale cliente */
     .modal-sm {
       background: var(--surface); border: 1px solid var(--border);
       border-radius: var(--radius-lg); width: 420px; max-width: 95vw;
@@ -376,7 +347,7 @@
 <aside class="sidebar">
   <div class="sidebar-logo">
     <div class="logo-mark">S</div>
-    <div class="logo-text"><strong>Salon Manager</strong><span>Demo</span></div>
+    <div class="logo-text"><strong>Salon Manager</strong><span>Gestionale</span></div>
   </div>
   <nav>
     <div class="nav-label">Principale</div>
@@ -387,11 +358,14 @@
     <div class="nav-item" onclick="goTo('prenotazioni', this)">
       <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
       Prenotazioni
-      <span class="nav-badge">3</span>
     </div>
     <div class="nav-item" onclick="goTo('clienti', this)">
       <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
       Clienti
+    </div>
+    <div class="nav-item" onclick="goTo('servizi', this)">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+      Servizi
     </div>
     <div class="nav-item" onclick="goTo('statistiche', this)">
       <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
@@ -410,130 +384,34 @@
   <div class="topbar">
     <div class="topbar-title" id="pageTitle">Dashboard</div>
     <div class="topbar-date" id="topbarDate"></div>
-    <!-- Bottone sempre presente in tutte le pagine -->
     <button class="btn btn-primary" onclick="openNuovaPrenotazione()">+ Nuova prenotazione</button>
   </div>
 
-  <!-- DASHBOARD -->
-  <div class="page active" id="page-dashboard">
-    <div class="kpi-grid">
-      <div class="kpi-card">
-        <div class="kpi-label">Appuntamenti oggi</div>
-        <div class="kpi-value">8</div>
-        <div class="kpi-delta up">+12% vs ieri</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-label">Incasso stimato oggi</div>
-        <div class="kpi-value">€ 320</div>
-        <div class="kpi-delta up">+8% vs ieri</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-label">Clienti totali</div>
-        <div class="kpi-value">142</div>
-        <div class="kpi-delta up">+3 questo mese</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-label">Valutazione media</div>
-        <div class="kpi-value">4.8</div>
-        <div class="kpi-delta down">-2% vs mese scorso</div>
-      </div>
-    </div>
-    <div class="content-grid">
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">Agenda di oggi</div>
-          <button class="btn btn-outline btn-sm" onclick="goTo('prenotazioni', document.querySelector('[onclick*=prenotazioni]'))">Vista settimana</button>
-        </div>
-        <div class="card-body" id="agendaOggi"></div>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:16px;">
-        <div class="card">
-          <div class="card-header"><div class="card-title">Calendario</div></div>
-          <div class="mini-cal" id="miniCal"></div>
-        </div>
-        <div class="card">
-          <div class="card-header"><div class="card-title">Prossimi 3 giorni</div></div>
-          <div class="card-body" id="prossimiApt"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- PRENOTAZIONI -->
-  <div class="page" id="page-prenotazioni">
-    <p style="font-size:12px;color:var(--muted);margin-bottom:14px;">Vista settimanale — settimana corrente</p>
-    <div class="week-grid" id="weekGrid"></div>
-    <div style="margin-top:12px;display:flex;gap:16px;font-size:12px;color:var(--muted);">
-      <span style="display:flex;align-items:center;gap:6px;"><span style="width:10px;height:10px;border-radius:2px;background:var(--green-light);border:1px solid var(--green);display:inline-block;"></span> Confermato</span>
-      <span style="display:flex;align-items:center;gap:6px;"><span style="width:10px;height:10px;border-radius:2px;background:var(--amber-light);border:1px solid #d97706;display:inline-block;"></span> In attesa</span>
-    </div>
-  </div>
-
-  <!-- CLIENTI -->
-  <div class="page" id="page-clienti">
-    <div class="search-bar">
-      <input class="search-input" type="text" placeholder="Cerca per nome, telefono o servizio..." id="searchInput" oninput="filtraClienti(this.value)">
-      <button class="btn btn-primary" onclick="openModal('modalNuovoCliente')">+ Nuovo cliente</button>
-    </div>
-    <div class="card">
-      <div class="table-wrap">
-        <table>
-          <thead><tr>
-            <th>Cliente</th><th>Telefono</th><th>Ultimo servizio</th>
-            <th>Ultima visita</th><th>Spesa totale</th><th>Tipo</th><th></th>
-          </tr></thead>
-          <tbody id="tableClienti"></tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <!-- STATISTICHE -->
-  <div class="page" id="page-statistiche">
-    <p style="font-size:12px;color:var(--muted);margin-bottom:16px;">Riepilogo ultimi 30 giorni</p>
-    <div class="kpi-grid" style="margin-bottom:16px;">
-      <div class="kpi-card"><div class="kpi-label">Fatturato mensile</div><div class="kpi-value">€ 4.850</div><div class="kpi-delta up">+15% vs mese scorso</div></div>
-      <div class="kpi-card"><div class="kpi-label">Appuntamenti totali</div><div class="kpi-value">78</div><div class="kpi-delta up">+6 vs mese scorso</div></div>
-      <div class="kpi-card"><div class="kpi-label">Scontrino medio</div><div class="kpi-value">€ 62</div><div class="kpi-delta up">+5% vs mese scorso</div></div>
-      <div class="kpi-card"><div class="kpi-label">Tasso di ritorno</div><div class="kpi-value">68%</div><div class="kpi-delta down">-1% vs mese scorso</div></div>
-    </div>
-    <div class="stats-grid">
-      <div class="card"><div class="card-header"><div class="card-title">Servizi piu richiesti</div></div><div class="card-body"><div class="chart-bar-wrap" id="barServ"></div></div></div>
-      <div class="card"><div class="card-header"><div class="card-title">Incasso per giorno della settimana</div></div><div class="card-body"><div class="chart-bar-wrap" id="barGiorni"></div></div></div>
-      <div class="card"><div class="card-header"><div class="card-title">Fasce orarie piu affollate</div></div><div class="card-body"><div class="chart-bar-wrap" id="barOrari"></div></div></div>
-      <div class="card"><div class="card-header"><div class="card-title">Tipologia clienti</div></div><div class="card-body"><div class="donut-wrap"><svg width="110" height="110" viewBox="0 0 110 110" id="donutSvg"></svg><div class="donut-legend" id="donutLegend"></div></div></div></div>
-    </div>
-  </div>
+  <div class="page active" id="page-dashboard"></div>
+  <div class="page" id="page-prenotazioni"></div>
+  <div class="page" id="page-clienti"></div>
+  <div class="page" id="page-servizi"></div>
+  <div class="page" id="page-statistiche"></div>
 </div>
 
-<!-- =====================================================
-     MODALE NUOVA PRENOTAZIONE — layout visivo click
-     ===================================================== -->
-<div class="modal-backdrop" id="modalNuovaPrenotazione" onclick="chiudiNuovaPrenotazione(event)">
+<!-- MODALE PRENOTAZIONE -->
+<div class="modal-backdrop" id="modalNuovaPrenotazione" onclick="if(event.target===this)closeModal('modalNuovaPrenotazione')">
   <div class="modal-np">
-
     <div class="modal-np-header">
-      <div class="modal-np-title">Nuova prenotazione</div>
+      <div class="modal-np-title" id="modal-np-title">Nuova prenotazione</div>
       <button class="modal-np-close" onclick="closeModal('modalNuovaPrenotazione')">&#x2715;</button>
     </div>
-
     <div class="modal-np-body">
-
-      <!-- SEZIONE: Cliente -->
       <div class="np-section">
         <div class="np-section-label">1. Seleziona cliente</div>
         <div class="np-selected-info" id="info-cliente">Nessun cliente selezionato</div>
         <div class="sel-grid-2" id="grid-clienti"></div>
       </div>
-
-      <!-- SEZIONE: Servizio -->
       <div class="np-section">
         <div class="np-section-label">2. Seleziona servizio</div>
         <div class="np-selected-info" id="info-servizio">Nessun servizio selezionato</div>
         <div class="sel-grid-2" id="grid-servizi"></div>
       </div>
-
-      <!-- SEZIONE: Data (calendario mensile) -->
       <div class="np-section">
         <div class="np-section-label">3. Seleziona data</div>
         <div class="np-selected-info" id="info-data">Nessuna data selezionata</div>
@@ -544,53 +422,56 @@
         </div>
         <div class="np-cal-grid" id="np-cal-grid"></div>
       </div>
-
-      <!-- SEZIONE: Orario -->
       <div class="np-section">
         <div class="np-section-label">4. Seleziona orario</div>
         <div class="np-selected-info" id="info-ora">Nessun orario selezionato</div>
         <div class="sel-grid-3" id="grid-orari"></div>
       </div>
-
-    </div><!-- /modal-np-body -->
-
-    <div class="modal-np-note">
-      <label>Note (opzionale)</label>
-      <input type="text" id="np_note" placeholder="Allergie, preferenze colore...">
     </div>
-
-    <div class="modal-np-footer">
-      <div class="modal-np-summary" id="np-summary">Seleziona cliente, servizio, data e orario</div>
-      <div style="display:flex;gap:8px;">
-        <button class="btn btn-outline" onclick="closeModal('modalNuovaPrenotazione')">Annulla</button>
-        <button class="btn btn-primary" onclick="salvaPrenotazione()">Conferma prenotazione</button>
+    <div class="modal-np-note">
+      <div style="display:grid;grid-template-columns:1fr 160px;gap:14px;align-items:end;">
+        <div>
+          <label>Note (opzionale)</label>
+          <input type="text" id="np_note" placeholder="Allergie, preferenze colore...">
+        </div>
+        <div>
+          <label>Stato</label>
+          <select id="np_stato">
+            <option value="confermata">Confermata</option>
+            <option value="completata">Completata</option>
+            <option value="cancellata">Cancellata</option>
+          </select>
+        </div>
       </div>
     </div>
-
+    <div class="modal-np-footer">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div class="modal-np-summary" id="np-summary">Seleziona cliente, servizio, data e orario</div>
+        <button class="btn btn-danger btn-sm" id="btn-elimina-prenot" style="display:none" onclick="eliminaPrenotazioneDaModal()">Elimina</button>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-outline" onclick="closeModal('modalNuovaPrenotazione')">Annulla</button>
+        <button class="btn btn-primary" id="btn-conferma-prenot" onclick="salvaPrenotazione()">Conferma prenotazione</button>
+      </div>
+    </div>
   </div>
 </div>
 
-<!-- MODALE NUOVO CLIENTE -->
+<!-- MODALE CLIENTE -->
 <div class="modal-backdrop" id="modalNuovoCliente" onclick="if(event.target===this)closeModal('modalNuovoCliente')">
   <div class="modal-sm" onclick="event.stopPropagation()">
     <div class="modal-header">
-      <div class="modal-title">Nuovo cliente</div>
+      <div class="modal-title" id="modal-cliente-titolo">Nuovo cliente</div>
       <button class="modal-close" onclick="closeModal('modalNuovoCliente')">&#x2715;</button>
     </div>
     <div class="modal-body">
       <div class="form-2col">
-        <div class="form-row"><label>Nome</label><input type="text" placeholder="Giulia" id="nc_nome"></div>
-        <div class="form-row"><label>Cognome</label><input type="text" placeholder="Rossi" id="nc_cognome"></div>
+        <div class="form-row"><label>Nome *</label><input type="text" id="nc_nome" placeholder="Giulia"></div>
+        <div class="form-row"><label>Cognome *</label><input type="text" id="nc_cognome" placeholder="Rossi"></div>
       </div>
-      <div class="form-row"><label>Telefono</label><input type="tel" placeholder="347 123 4567" id="nc_tel"></div>
-      <div class="form-row"><label>Email</label><input type="email" placeholder="giulia@email.com" id="nc_email"></div>
-      <div class="form-row">
-        <label>Servizio preferito</label>
-        <select id="nc_servizio">
-          <option>Taglio e piega</option><option>Colorazione</option>
-          <option>Trattamento keratina</option><option>Balayage</option><option>Messa in piega</option>
-        </select>
-      </div>
+      <div class="form-row"><label>Telefono</label><input type="tel" id="nc_tel" placeholder="347 123 4567"></div>
+      <div class="form-row"><label>Email</label><input type="email" id="nc_email" placeholder="giulia@email.com"></div>
+      <div class="form-row"><label>Note</label><input type="text" id="nc_note" placeholder="Preferenze, allergie..."></div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-outline" onclick="closeModal('modalNuovoCliente')">Annulla</button>
@@ -602,257 +483,508 @@
 <div class="toast-container" id="toastContainer"></div>
 
 <script>
-/* ---- DATI ---- */
-const clientiData = [
-  { nome:'Giulia Rossi',    tel:'347 123 4567', servizio:'Taglio e piega',       ultima:'15 Mar 2026', spesa:'€ 320', tag:'fedele' },
-  { nome:'Marta Bianchi',   tel:'328 987 6543', servizio:'Colorazione',           ultima:'22 Mar 2026', spesa:'€ 510', tag:'vip' },
-  { nome:'Laura Conti',     tel:'366 456 7890', servizio:'Trattamento keratina',  ultima:'10 Mar 2026', spesa:'€ 240', tag:'fedele' },
-  { nome:'Sofia Greco',     tel:'347 222 3333', servizio:'Balayage',              ultima:'28 Mar 2026', spesa:'€ 180', tag:'nuova' },
-  { nome:'Elena Marini',    tel:'338 111 2222', servizio:'Messa in piega',        ultima:'20 Mar 2026', spesa:'€ 420', tag:'vip' },
-  { nome:'Carla Neri',      tel:'329 333 4444', servizio:'Taglio e piega',        ultima:'5 Mar 2026',  spesa:'€ 135', tag:'fedele' },
-  { nome:'Francesca Rizzo', tel:'347 555 6666', servizio:'Permanente',            ultima:'1 Mar 2026',  spesa:'€ 290', tag:'fedele' },
-  { nome:'Anna Lombardi',   tel:'340 777 8888', servizio:'Colorazione',           ultima:'27 Mar 2026', spesa:'€ 640', tag:'vip' },
-];
+// =============================================
+// STATO GLOBALE
+// =============================================
+let currentPage = 'dashboard';
+let allPrenotazioni = [], allClienti = [], allServizi = [];
+let weekStart = null;
+let calDate = new Date();
+let editingPrenotazioneId = null;
+let editingClienteId = null;
 
-const serviziData = [
-  { nome:'Taglio e piega',      durata:'60 min', prezzo:'€ 45' },
-  { nome:'Colorazione',         durata:'90 min', prezzo:'€ 80' },
-  { nome:'Balayage',            durata:'120 min', prezzo:'€ 90' },
-  { nome:'Trattamento keratina',durata:'90 min', prezzo:'€ 120' },
-  { nome:'Messa in piega',      durata:'30 min', prezzo:'€ 30' },
-  { nome:'Permanente',          durata:'120 min', prezzo:'€ 70' },
-  { nome:'Taglio bambino',      durata:'30 min', prezzo:'€ 20' },
-  { nome:'Trattamento colore',  durata:'60 min', prezzo:'€ 55' },
-];
+// Stato modale prenotazione
+let npCliente = null, npServizio = null, npData = null, npOra = null;
+let npCalDate = new Date();
 
-const orariDisponibili = [
-  '09:00','09:30','10:00','10:30','11:00','11:30',
-  '12:00','14:00','14:30','15:00','15:30','16:00','16:30','17:00'
-];
+const MESI = ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
+const GIORNI_SHORT = ['Lu','Ma','Me','Gi','Ve','Sa','Do'];
+const ORARI = ['09:00','09:30','10:00','10:30','11:00','11:30','12:00','14:00','14:30','15:00','15:30','16:00','16:30','17:00'];
 
-const agendaData = [
-  { ora:'09:00', nome:'Giulia Rossi',    servizio:'Taglio e piega',      prezzo:'€ 45',  status:'ok' },
-  { ora:'09:30', nome:'Marta Bianchi',   servizio:'Colorazione',          prezzo:'€ 80',  status:'ok' },
-  { ora:'10:30', nome:'Laura Conti',     servizio:'Trattamento keratina', prezzo:'€ 120', status:'attesa' },
-  { ora:'11:30', nome:'Sofia Greco',     servizio:'Balayage',             prezzo:'€ 90',  status:'ok' },
-  { ora:'12:00', nome:'',               servizio:'Slot libero',          prezzo:'',      status:'libero' },
-  { ora:'14:00', nome:'Elena Marini',    servizio:'Messa in piega',       prezzo:'€ 30',  status:'ok' },
-  { ora:'15:30', nome:'Carla Neri',      servizio:'Taglio e piega',       prezzo:'€ 45',  status:'attesa' },
-  { ora:'17:00', nome:'Anna Lombardi',   servizio:'Colorazione',          prezzo:'€ 75',  status:'ok' },
-];
+// =============================================
+// UTILS
+// =============================================
+function fmt(date) {
+  return new Date(date).toLocaleDateString('it-IT', { day:'2-digit', month:'2-digit', year:'numeric' });
+}
+function fmtTime(date) {
+  return new Date(date).toLocaleTimeString('it-IT', { hour:'2-digit', minute:'2-digit' });
+}
+function fmtCurrency(n) {
+  return '€' + Number(n).toFixed(2).replace('.', ',');
+}
+function initials(nome, cognome) {
+  return ((nome?.[0] || '') + (cognome?.[0] || '')).toUpperCase();
+}
+function statoBadge(stato) {
+  const map   = { confermata:'badge-blue', completata:'badge-green', cancellata:'badge-red' };
+  const label = { confermata:'Confermata', completata:'Completata', cancellata:'Cancellata' };
+  return `<span class="badge ${map[stato]||'badge-gray'}">${label[stato]||stato}</span>`;
+}
+function showToast(msg, type = 'success') {
+  const cont = document.getElementById('toastContainer');
+  const t = document.createElement('div');
+  t.className = `toast${type==='success'?' success':type==='error'?' error':''}`;
+  t.textContent = msg;
+  cont.appendChild(t);
+  setTimeout(() => {
+    t.style.opacity = '0'; t.style.transform = 'translateX(50px)'; t.style.transition = '.3s';
+    setTimeout(() => t.remove(), 320);
+  }, 3500);
+}
+function showPageError(el, msg) {
+  el.innerHTML = `<div style="max-width:480px;margin:4rem auto;padding:1.5rem;background:var(--surface);border:1px solid #fca5a5;border-radius:var(--radius-lg);text-align:center;">
+    <div style="font-size:28px;margin-bottom:.75rem;">⚠️</div>
+    <p style="color:var(--text);font-size:14px;">${msg}</p>
+  </div>`;
+}
+function loading(el) {
+  el.innerHTML = '<div style="padding:3rem;text-align:center;color:var(--muted);font-size:13px;">Caricamento...</div>';
+}
 
-const prossimiData = [
-  { nome:'Sofia Greco',  servizio:'Balayage',       giorno:'Domani',     ora:'09:00' },
-  { nome:'Elena Marini', servizio:'Messa in piega', giorno:'Domani',     ora:'11:30' },
-  { nome:'Giulia Rossi', servizio:'Taglio',         giorno:'Dopodomani', ora:'10:00' },
-];
+// =============================================
+// SUPABASE FETCH
+// =============================================
+async function fetchAll() {
+  const [resP, resC, resS] = await Promise.all([
+    supabase.from('prenotazioni_dettaglio').select('*').order('data_ora', { ascending: false }),
+    supabase.from('clienti').select('*').order('cognome'),
+    supabase.from('servizi').select('*').eq('attivo', true).order('nome'),
+  ]);
+  if (resP.error) throw new Error(resP.error.message);
+  if (resC.error) throw new Error(resC.error.message);
+  if (resS.error) throw new Error(resS.error.message);
+  allPrenotazioni = resP.data || [];
+  allClienti      = resC.data || [];
+  allServizi      = resS.data || [];
+}
 
-const weekData = [
-  { giorno:0, ora:0, nome:'Giulia R.',    servizio:'Taglio',      c:'apt-confirmed' },
-  { giorno:0, ora:2, nome:'Marta B.',     servizio:'Colorazione', c:'apt-confirmed' },
-  { giorno:1, ora:1, nome:'Laura C.',     servizio:'Keratina',    c:'apt-pending' },
-  { giorno:1, ora:4, nome:'Sofia G.',     servizio:'Balayage',    c:'apt-confirmed' },
-  { giorno:2, ora:0, nome:'Elena M.',     servizio:'Piega',       c:'apt-confirmed' },
-  { giorno:2, ora:2, nome:'Carla N.',     servizio:'Taglio',      c:'apt-confirmed' },
-  { giorno:2, ora:3, nome:'Anna L.',      servizio:'Colorazione', c:'apt-pending' },
-  { giorno:3, ora:1, nome:'Francesca R.', servizio:'Permanente',  c:'apt-pending' },
-  { giorno:3, ora:4, nome:'Marta B.',     servizio:'Piega',       c:'apt-confirmed' },
-  { giorno:4, ora:0, nome:'Giulia R.',    servizio:'Balayage',    c:'apt-confirmed' },
-  { giorno:4, ora:3, nome:'Sofia G.',     servizio:'Taglio',      c:'apt-confirmed' },
-  { giorno:5, ora:2, nome:'Laura C.',     servizio:'Colorazione', c:'apt-confirmed' },
-];
-
-/* ---- NAVIGAZIONE ---- */
+// =============================================
+// NAVIGAZIONE
+// =============================================
 function goTo(page, el) {
+  currentPage = page;
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById('page-' + page).classList.add('active');
   if (el) el.classList.add('active');
-  const titles = { dashboard:'Dashboard', prenotazioni:'Prenotazioni', clienti:'Clienti', statistiche:'Statistiche' };
+  const titles = { dashboard:'Dashboard', prenotazioni:'Prenotazioni', clienti:'Clienti', servizi:'Servizi', statistiche:'Statistiche' };
   document.getElementById('pageTitle').textContent = titles[page] || page;
+  renderPage(page);
+}
+function renderPage(page) {
+  if (page === 'dashboard')    renderDashboard();
+  else if (page === 'prenotazioni') renderPrenotazioni();
+  else if (page === 'clienti')      renderClienti();
+  else if (page === 'servizi')      renderServizi();
+  else if (page === 'statistiche')  renderStatistiche();
 }
 
-/* ---- DATA TOPBAR ---- */
-function aggiornaData() {
-  document.getElementById('topbarDate').textContent =
-    new Date().toLocaleDateString('it-IT', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
-}
+// =============================================
+// DASHBOARD
+// =============================================
+async function renderDashboard() {
+  const el = document.getElementById('page-dashboard');
+  loading(el);
+  try { await fetchAll(); } catch(e) { showPageError(el, 'Errore connessione: ' + e.message); return; }
 
-/* ---- AGENDA ---- */
-function renderAgenda() {
-  const statusMap   = { ok:'badge-green', attesa:'badge-amber', libero:'badge-gray' };
-  const statusLabel = { ok:'Confermato',  attesa:'In attesa',   libero:'Libero' };
-  const barColor    = { ok:'var(--accent)', attesa:'var(--amber)', libero:'var(--border)' };
-  document.getElementById('agendaOggi').innerHTML = agendaData.map(s => `
-    <div class="agenda-slot">
-      <div class="slot-time">${s.ora}</div>
-      <div class="slot-bar" style="background:${barColor[s.status]}"></div>
-      <div class="slot-info">
-        <div class="slot-name">${s.nome || 'Slot libero'}</div>
-        <div class="slot-service">${s.servizio}</div>
+  const oggi = new Date(); oggi.setHours(0,0,0,0);
+  const inizioMese     = new Date(oggi.getFullYear(), oggi.getMonth(), 1);
+  const inizioMesePrec = new Date(oggi.getFullYear(), oggi.getMonth()-1, 1);
+  const fineMesePrec   = new Date(oggi.getFullYear(), oggi.getMonth(), 0);
+
+  const meseCorr = allPrenotazioni.filter(p => new Date(p.data_ora) >= inizioMese && p.stato !== 'cancellata');
+  const mesePrec = allPrenotazioni.filter(p => { const d = new Date(p.data_ora); return d >= inizioMesePrec && d <= fineMesePrec && p.stato !== 'cancellata'; });
+  const oggiList = allPrenotazioni.filter(p => {
+    const d = new Date(p.data_ora); d.setHours(0,0,0,0);
+    return d.getTime() === oggi.getTime() && p.stato !== 'cancellata';
+  }).sort((a,b) => new Date(a.data_ora) - new Date(b.data_ora));
+
+  const incassoMese = meseCorr.filter(p => p.stato==='completata').reduce((s,p) => s + +p.prezzo, 0);
+  const incassoPrec = mesePrec.filter(p => p.stato==='completata').reduce((s,p) => s + +p.prezzo, 0);
+  const deltaI = incassoPrec > 0 ? ((incassoMese - incassoPrec) / incassoPrec * 100).toFixed(0) : null;
+  const appMese = meseCorr.length;
+  const appPrec = mesePrec.length;
+  const deltaA  = appPrec > 0 ? appMese - appPrec : null;
+
+  const prossimi = allPrenotazioni.filter(p => new Date(p.data_ora) > new Date() && p.stato === 'confermata')
+    .sort((a,b) => new Date(a.data_ora) - new Date(b.data_ora)).slice(0, 5);
+
+  el.innerHTML = `
+    <div class="kpi-grid">
+      <div class="kpi-card"><div class="kpi-label">Appuntamenti oggi</div><div class="kpi-value">${oggiList.length}</div></div>
+      <div class="kpi-card">
+        <div class="kpi-label">Incasso mese</div>
+        <div class="kpi-value">${fmtCurrency(incassoMese)}</div>
+        ${deltaI !== null ? `<div class="kpi-delta ${+deltaI<0?'down':'up'}">${+deltaI>=0?'+':''}${deltaI}% vs mese scorso</div>` : ''}
       </div>
-      ${s.prezzo ? `<div class="slot-price">${s.prezzo}</div>` : ''}
-      <span class="badge ${statusMap[s.status]}">${statusLabel[s.status]}</span>
+      <div class="kpi-card">
+        <div class="kpi-label">Appuntamenti mese</div>
+        <div class="kpi-value">${appMese}</div>
+        ${deltaA !== null ? `<div class="kpi-delta ${deltaA<0?'down':'up'}">${deltaA>=0?'+':''}${deltaA} vs mese scorso</div>` : ''}
+      </div>
+      <div class="kpi-card"><div class="kpi-label">Clienti totali</div><div class="kpi-value">${allClienti.length}</div></div>
     </div>
-  `).join('');
+    <div class="content-grid">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Agenda di oggi</div>
+          <button class="btn btn-outline btn-sm" onclick="openNuovaPrenotazione()">+ Aggiungi</button>
+        </div>
+        <div class="card-body">
+          ${oggiList.length === 0
+            ? '<div style="color:var(--muted);font-size:13px;padding:.5rem 0">Nessun appuntamento oggi</div>'
+            : oggiList.map(p => `
+              <div class="agenda-slot">
+                <div class="slot-time">${fmtTime(p.data_ora)}</div>
+                <div class="slot-bar" style="background:${p.stato==='completata'?'var(--green)':p.stato==='cancellata'?'var(--red)':'var(--accent)'}"></div>
+                <div class="slot-info">
+                  <div class="slot-name">${p.cliente_nome || 'Cliente eliminato'}</div>
+                  <div class="slot-service">${p.servizio_nome || '—'}</div>
+                </div>
+                <div class="slot-price">${fmtCurrency(p.prezzo)}</div>
+                ${statoBadge(p.stato)}
+              </div>`).join('')}
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Calendario</div></div>
+          <div class="mini-cal" id="miniCal"></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Prossimi appuntamenti</div></div>
+          <div class="card-body">
+            ${prossimi.length === 0
+              ? '<div style="color:var(--muted);font-size:13px">Nessuna prenotazione futura</div>'
+              : prossimi.map(p => {
+                  const parts = (p.cliente_nome || '?').split(' ');
+                  return `<div class="next-apt">
+                    <div class="apt-av">${initials(parts[0], parts[1]||'')}</div>
+                    <div class="apt-info">
+                      <div class="apt-name">${p.cliente_nome || '—'}</div>
+                      <div class="apt-detail">${p.servizio_nome || '—'}</div>
+                    </div>
+                    <div class="apt-when">${fmt(p.data_ora)}<br>${fmtTime(p.data_ora)}</div>
+                  </div>`;
+                }).join('')}
+          </div>
+        </div>
+      </div>
+    </div>`;
+
+  renderMiniCal();
 }
 
-/* ---- MINI CALENDARIO (sidebar) ---- */
-let calDate = new Date();
 function renderMiniCal() {
-  const today = new Date();
+  const el = document.getElementById('miniCal');
+  if (!el) return;
+  const datesWithBookings = new Set(allPrenotazioni.filter(p => p.stato !== 'cancellata').map(p => {
+    const d = new Date(p.data_ora); d.setHours(0,0,0,0); return d.getTime();
+  }));
+  const today = new Date(); today.setHours(0,0,0,0);
   const y = calDate.getFullYear(), m = calDate.getMonth();
-  const firstDay = new Date(y, m, 1).getDay();
-  const daysInMonth = new Date(y, m + 1, 0).getDate();
-  const monthNames = ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
-  const dayNames = ['Lu','Ma','Me','Gi','Ve','Sa','Do'];
-  const hasPren = [3,7,8,10,12,14,15,17,19,21,22,24,25,28,29];
-  let html = `
-    <div class="cal-nav">
-      <button onclick="calMove(-1)">&#8249;</button>
-      <div class="cal-month">${monthNames[m]} ${y}</div>
-      <button onclick="calMove(1)">&#8250;</button>
-    </div>
-    <div class="cal-grid">
-      ${dayNames.map(d => `<div class="cal-day-name">${d}</div>`).join('')}
-  `;
-  const startEmpty = (firstDay === 0 ? 6 : firstDay - 1);
+  const firstDay    = new Date(y, m, 1).getDay();
+  const daysInMonth = new Date(y, m+1, 0).getDate();
+  const startEmpty  = firstDay === 0 ? 6 : firstDay - 1;
+  let html = `<div class="cal-nav">
+    <button onclick="calMove(-1)">&#8249;</button>
+    <div class="cal-month">${MESI[m]} ${y}</div>
+    <button onclick="calMove(1)">&#8250;</button>
+  </div>
+  <div class="cal-grid">
+    ${GIORNI_SHORT.map(d => `<div class="cal-day-name">${d}</div>`).join('')}`;
   for (let i = 0; i < startEmpty; i++) html += `<div class="cal-day other-month"></div>`;
   for (let d = 1; d <= daysInMonth; d++) {
-    const isToday = d === today.getDate() && m === today.getMonth() && y === today.getFullYear();
-    html += `<div class="cal-day${isToday?' today':''}${hasPren.includes(d)?' has-event':''}">${d}</div>`;
+    const date = new Date(y, m, d); date.setHours(0,0,0,0);
+    const isToday    = date.getTime() === today.getTime();
+    const hasEvent   = datesWithBookings.has(date.getTime());
+    html += `<div class="cal-day${isToday?' today':''}${hasEvent?' has-event':''}">${d}</div>`;
   }
   html += `</div>`;
-  document.getElementById('miniCal').innerHTML = html;
+  el.innerHTML = html;
 }
-function calMove(dir) { calDate.setMonth(calDate.getMonth() + dir); renderMiniCal(); }
-
-/* ---- PROSSIMI ---- */
-function renderProssimi() {
-  document.getElementById('prossimiApt').innerHTML = prossimiData.map(a => `
-    <div class="next-apt">
-      <div class="apt-av">${a.nome[0]}</div>
-      <div class="apt-info">
-        <div class="apt-name">${a.nome}</div>
-        <div class="apt-detail">${a.servizio}</div>
-      </div>
-      <div class="apt-when"><span>${a.giorno}</span><span>${a.ora}</span></div>
-    </div>
-  `).join('');
+function calMove(dir) {
+  calDate = new Date(calDate.getFullYear(), calDate.getMonth() + dir, 1);
+  renderMiniCal();
 }
 
-/* ---- VISTA SETTIMANALE ---- */
-function renderWeek() {
-  const oggi = new Date();
-  const lun = new Date(oggi);
-  lun.setDate(oggi.getDate() - (oggi.getDay() === 0 ? 6 : oggi.getDay() - 1));
+// =============================================
+// PRENOTAZIONI — vista settimanale
+// =============================================
+function getWeekStart(date) {
+  const d = new Date(date);
+  const day = d.getDay();
+  d.setDate(d.getDate() - (day === 0 ? 6 : day - 1));
+  d.setHours(0,0,0,0);
+  return d;
+}
+
+async function renderPrenotazioni() {
+  const el = document.getElementById('page-prenotazioni');
+  loading(el);
+  try { await fetchAll(); } catch(e) { showPageError(el, 'Errore: ' + e.message); return; }
+  if (!weekStart) weekStart = getWeekStart(new Date());
+  buildWeekView();
+}
+
+function buildWeekView() {
+  const el = document.getElementById('page-prenotazioni');
+  const oggi = new Date(); oggi.setHours(0,0,0,0);
   const giorni = ['Lun','Mar','Mer','Gio','Ven','Sab'];
-  const ore = ['09:00','10:00','11:00','12:00','15:00','16:00','17:00'];
-  const todayIdx = oggi.getDay() === 0 ? 6 : oggi.getDay() - 1;
-  let html = '<div class="wg-header"></div>';
+  const ore    = ['09:00','10:00','11:00','12:00','14:00','15:00','16:00','17:00'];
+
+  const weekEnd = new Date(weekStart);
+  weekEnd.setDate(weekStart.getDate() + 5);
+  weekEnd.setHours(23,59,59,999);
+
+  const weekBookings = allPrenotazioni.filter(p => {
+    const d = new Date(p.data_ora);
+    return d >= weekStart && d <= weekEnd && p.stato !== 'cancellata';
+  });
+
+  const weekLabel = `${weekStart.toLocaleDateString('it-IT',{day:'numeric',month:'short'})} – ${weekEnd.toLocaleDateString('it-IT',{day:'numeric',month:'short',year:'numeric'})}`;
+
+  let gridHtml = `<div class="wg-header"></div>`;
   for (let g = 0; g < 6; g++) {
-    const d = new Date(lun); d.setDate(lun.getDate() + g);
-    html += `<div class="wg-header${g===todayIdx?' today-col':''}"><small>${d.getDate()}</small>${giorni[g]}</div>`;
+    const d = new Date(weekStart); d.setDate(weekStart.getDate() + g); d.setHours(0,0,0,0);
+    const isToday = d.getTime() === oggi.getTime();
+    gridHtml += `<div class="wg-header${isToday?' today-col':''}"><small>${d.getDate()}</small>${giorni[g]}</div>`;
   }
   for (let o = 0; o < ore.length; o++) {
-    html += `<div class="wg-time">${ore[o]}</div>`;
+    const hh = parseInt(ore[o].split(':')[0]);
+    gridHtml += `<div class="wg-time">${ore[o]}</div>`;
     for (let g = 0; g < 6; g++) {
-      const apts = weekData.filter(a => a.giorno === g && a.ora === o);
-      html += `<div class="wg-cell">${apts.map(a =>
-        `<div class="wg-apt ${a.c}" onclick="showToast('${a.nome} — ${a.servizio}','info')">${a.nome}<br><span style="font-weight:400;opacity:.75">${a.servizio}</span></div>`
-      ).join('')}</div>`;
+      const dayDate = new Date(weekStart); dayDate.setDate(weekStart.getDate() + g); dayDate.setHours(0,0,0,0);
+      const apts = weekBookings.filter(p => {
+        const pd = new Date(p.data_ora);
+        const pdDay = new Date(pd); pdDay.setHours(0,0,0,0);
+        return pdDay.getTime() === dayDate.getTime() && pd.getHours() === hh;
+      });
+      const cls = g === 5 ? '' : '';
+      gridHtml += `<div class="wg-cell">${apts.map(p => {
+        const nomeBreve = (p.cliente_nome||'?').split(' ').slice(0,2).map((n,i) => i===0?n:n[0]+'.').join(' ');
+        const aptCls = p.stato === 'completata' ? 'apt-confirmed' : 'apt-pending';
+        return `<div class="wg-apt ${aptCls}" onclick="openEditPrenotazione('${p.id}')" title="${p.cliente_nome||''} — ${p.servizio_nome||''} — ${fmtTime(p.data_ora)}">${nomeBreve}<br><span style="font-weight:400;opacity:.75">${p.servizio_nome||''}</span></div>`;
+      }).join('')}</div>`;
     }
   }
-  document.getElementById('weekGrid').innerHTML = html;
+
+  el.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <button class="btn btn-outline btn-sm" onclick="weekMove(-1)">‹ Prec.</button>
+        <span style="font-size:13px;font-weight:600;min-width:200px;text-align:center">${weekLabel}</span>
+        <button class="btn btn-outline btn-sm" onclick="weekMove(1)">Succ. ›</button>
+        <button class="btn btn-outline btn-sm" onclick="weekMove(0)">Oggi</button>
+      </div>
+      <button class="btn btn-primary" onclick="openNuovaPrenotazione()">+ Nuova</button>
+    </div>
+    <div class="week-grid">${gridHtml}</div>
+    <div style="margin-top:12px;display:flex;gap:16px;font-size:12px;color:var(--muted);">
+      <span style="display:flex;align-items:center;gap:6px;"><span style="width:10px;height:10px;border-radius:2px;background:var(--green-light);border:1px solid var(--green);display:inline-block;"></span>Completato</span>
+      <span style="display:flex;align-items:center;gap:6px;"><span style="width:10px;height:10px;border-radius:2px;background:var(--amber-light);border:1px solid #d97706;display:inline-block;"></span>Confermato</span>
+    </div>`;
 }
 
-/* ---- TABELLA CLIENTI ---- */
-let clientiList = [...clientiData];
-function renderClienti(data) {
-  const tagLabel = { fedele:'Fedele', nuova:'Nuova', vip:'VIP' };
-  const tagClass = { fedele:'badge-green', nuova:'badge-blue', vip:'badge-amber' };
-  document.getElementById('tableClienti').innerHTML = data.map(c => `
-    <tr>
-      <td><div class="client-cell">
-        <div class="client-av">${c.nome.split(' ').map(x=>x[0]).join('')}</div>
-        <strong>${c.nome}</strong>
-      </div></td>
-      <td>${c.tel}</td>
-      <td>${c.servizio}</td>
-      <td>${c.ultima}</td>
-      <td style="font-weight:600">${c.spesa}</td>
-      <td><span class="badge ${tagClass[c.tag]}">${tagLabel[c.tag]}</span></td>
-      <td style="display:flex;gap:6px;justify-content:flex-end;">
-        <button class="btn btn-outline btn-sm" onclick="openNuovaPrenotazione()">Prenota</button>
-        <button class="btn btn-danger btn-sm" onclick="showToast('Cliente eliminato','error')">Elimina</button>
-      </td>
-    </tr>
-  `).join('');
+function weekMove(dir) {
+  if (dir === 0) {
+    weekStart = getWeekStart(new Date());
+  } else {
+    weekStart = new Date(weekStart);
+    weekStart.setDate(weekStart.getDate() + dir * 7);
+  }
+  buildWeekView();
 }
+
+// =============================================
+// CLIENTI
+// =============================================
+async function renderClienti() {
+  const el = document.getElementById('page-clienti');
+  loading(el);
+  try { await fetchAll(); } catch(e) { showPageError(el, 'Errore: ' + e.message); return; }
+  buildClientiUI(allClienti);
+}
+
+function buildClientiUI(clienti) {
+  const el = document.getElementById('page-clienti');
+  el.innerHTML = `
+    <div class="search-bar">
+      <input class="search-input" type="text" placeholder="Cerca per nome o telefono..." oninput="filtraClienti(this.value)">
+      <button class="btn btn-primary" onclick="openNuovoCliente()">+ Nuovo cliente</button>
+    </div>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Cliente</th><th>Telefono</th><th>Email</th><th>Prenotazioni</th><th>Spesa totale</th><th></th></tr></thead>
+          <tbody id="tableClienti">${buildClientiRows(clienti)}</tbody>
+        </table>
+      </div>
+    </div>`;
+}
+
+function buildClientiRows(clienti) {
+  if (!clienti.length) return '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:2rem">Nessun cliente trovato</td></tr>';
+  return clienti.map(c => {
+    const pren  = allPrenotazioni.filter(p => p.cliente_id === c.id && p.stato !== 'cancellata');
+    const spesa = pren.filter(p => p.stato === 'completata').reduce((s,p) => s + +p.prezzo, 0);
+    return `<tr>
+      <td><div class="client-cell">
+        <div class="client-av">${initials(c.nome, c.cognome)}</div>
+        <strong>${c.nome} ${c.cognome}</strong>
+      </div></td>
+      <td>${c.telefono || '—'}</td>
+      <td>${c.email || '—'}</td>
+      <td>${pren.length}</td>
+      <td style="font-weight:600">${fmtCurrency(spesa)}</td>
+      <td style="display:flex;gap:6px;justify-content:flex-end;">
+        <button class="btn btn-outline btn-sm" onclick="openNuovaPrenotazionePer('${c.id}')">Prenota</button>
+        <button class="btn btn-outline btn-sm" onclick="openEditCliente('${c.id}')">✎</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteCliente('${c.id}')">✕</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
 function filtraClienti(q) {
   const f = q.toLowerCase();
-  renderClienti(clientiList.filter(c =>
-    c.nome.toLowerCase().includes(f) || c.tel.includes(f) || c.servizio.toLowerCase().includes(f)
-  ));
+  const filtered = allClienti.filter(c =>
+    `${c.nome} ${c.cognome}`.toLowerCase().includes(f) || (c.telefono||'').includes(q)
+  );
+  const tbody = document.getElementById('tableClienti');
+  if (tbody) tbody.innerHTML = buildClientiRows(filtered);
 }
 
-/* ---- STATISTICHE ---- */
-function renderBarre(id, items, cssColor) {
-  const max = Math.max(...items.map(i => i.val));
-  document.getElementById(id).innerHTML = items.map(item => `
-    <div class="chart-bar-row">
-      <div class="bar-label">${item.label}</div>
-      <div class="bar-track"><div class="bar-fill" style="width:${(item.val/max*100).toFixed(0)}%;background:${cssColor}"></div></div>
-      <div class="bar-val">${item.val}${item.suffix||''}</div>
+// =============================================
+// SERVIZI
+// =============================================
+async function renderServizi() {
+  const el = document.getElementById('page-servizi');
+  loading(el);
+  try { await fetchAll(); } catch(e) { showPageError(el, 'Errore: ' + e.message); return; }
+  el.innerHTML = `
+    <div style="margin-bottom:20px;font-size:18px;font-weight:700;">Servizi</div>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Servizio</th><th>Durata</th><th>Prezzo</th><th>Stato</th></tr></thead>
+          <tbody>
+            ${allServizi.length === 0
+              ? '<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:2rem">Nessun servizio configurato</td></tr>'
+              : allServizi.map(s => `<tr>
+                  <td><strong>${s.nome}</strong></td>
+                  <td>${s.durata_minuti} min</td>
+                  <td>${fmtCurrency(s.prezzo)}</td>
+                  <td><span class="badge badge-green">Attivo</span></td>
+                </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
     </div>
-  `).join('');
+    <p style="margin-top:1rem;font-size:12px;color:var(--muted)">Per aggiungere o modificare i servizi usa l'editor SQL di Supabase.</p>`;
 }
-function renderStatistiche() {
-  renderBarre('barServ', [
-    {label:'Taglio & piega',val:34},{label:'Colorazione',val:22},
-    {label:'Balayage',val:11},{label:'Keratina',val:7},{label:'Piega',val:4},
-  ], 'var(--accent)');
-  renderBarre('barGiorni', [
-    {label:'Lunedi',val:420,suffix:'€'},{label:'Martedi',val:610,suffix:'€'},
-    {label:'Mercoledi',val:580,suffix:'€'},{label:'Giovedi',val:730,suffix:'€'},
-    {label:'Venerdi',val:890,suffix:'€'},{label:'Sabato',val:620,suffix:'€'},
-  ], 'var(--green)');
-  renderBarre('barOrari', [
-    {label:'09:00–11:00',val:28},{label:'11:00–13:00',val:18},
-    {label:'14:00–16:00',val:20},{label:'16:00–18:00',val:12},
-  ], 'var(--accent)');
-  const segments = [
-    {label:'Clienti VIP',perc:22,color:'var(--accent)'},
-    {label:'Clienti fedeli',perc:48,color:'var(--green)'},
-    {label:'Nuove clienti',perc:30,color:'#d97706'},
-  ];
-  const cx=55,cy=55,r=38,stroke=18,circ=2*Math.PI*r;
-  let offset=0, svgPaths='';
-  segments.forEach(s => {
-    const dash = circ*s.perc/100;
-    svgPaths += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${s.color}" stroke-width="${stroke}" stroke-dasharray="${dash} ${circ-dash}" stroke-dashoffset="${-offset}" transform="rotate(-90 ${cx} ${cy})"/>`;
-    offset += dash;
+
+// =============================================
+// STATISTICHE
+// =============================================
+async function renderStatistiche() {
+  const el = document.getElementById('page-statistiche');
+  loading(el);
+  try { await fetchAll(); } catch(e) { showPageError(el, 'Errore: ' + e.message); return; }
+
+  const oggi       = new Date();
+  const inizioMese = new Date(oggi.getFullYear(), oggi.getMonth(), 1);
+  const completate = allPrenotazioni.filter(p => p.stato === 'completata');
+  const meseCorr   = completate.filter(p => new Date(p.data_ora) >= inizioMese);
+
+  const incassoTot  = completate.reduce((s,p) => s + +p.prezzo, 0);
+  const incassoMese = meseCorr.reduce((s,p) => s + +p.prezzo, 0);
+  const scontrino   = completate.length > 0 ? incassoTot / completate.length : 0;
+
+  // Servizi più richiesti
+  const servMap = {};
+  allPrenotazioni.filter(p => p.stato !== 'cancellata').forEach(p => {
+    const n = p.servizio_nome || 'Altro';
+    servMap[n] = (servMap[n] || 0) + 1;
   });
-  document.getElementById('donutSvg').innerHTML = svgPaths;
-  document.getElementById('donutLegend').innerHTML = segments.map(s => `
-    <div class="legend-item"><div class="legend-dot" style="background:${s.color}"></div><div><strong>${s.perc}%</strong> ${s.label}</div></div>
-  `).join('');
+  const servTop = Object.entries(servMap).sort((a,b) => b[1]-a[1]).slice(0,6);
+  const maxServ = servTop[0]?.[1] || 1;
+
+  // Incasso ultimi 6 mesi
+  const mesiMap = {};
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date(oggi.getFullYear(), oggi.getMonth()-i, 1);
+    mesiMap[d.toLocaleDateString('it-IT',{month:'short',year:'2-digit'})] = 0;
+  }
+  completate.forEach(p => {
+    const key = new Date(p.data_ora).toLocaleDateString('it-IT',{month:'short',year:'2-digit'});
+    if (key in mesiMap) mesiMap[key] += +p.prezzo;
+  });
+  const maxMese = Math.max(...Object.values(mesiMap), 1);
+
+  // Incasso per giorno settimana
+  const giorniLabel = ['Lun','Mar','Mer','Gio','Ven','Sab'];
+  const giorniMap   = { Lun:0, Mar:0, Mer:0, Gio:0, Ven:0, Sab:0 };
+  const dayMap      = [null,'Lun','Mar','Mer','Gio','Ven','Sab',null]; // 0=Dom
+  completate.forEach(p => {
+    const g = dayMap[new Date(p.data_ora).getDay()];
+    if (g) giorniMap[g] += +p.prezzo;
+  });
+  const maxGiorni = Math.max(...Object.values(giorniMap), 1);
+
+  function barRows(entries, maxVal, isCurrency, color) {
+    return entries.map(([k,v]) => `
+      <div class="chart-bar-row">
+        <div class="bar-label" title="${k}">${k}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${Math.round(v/maxVal*100)}%;background:${color}"></div></div>
+        <div class="bar-val">${isCurrency ? fmtCurrency(v) : v}</div>
+      </div>`).join('');
+  }
+
+  el.innerHTML = `
+    <div class="kpi-grid" style="margin-bottom:16px;">
+      <div class="kpi-card"><div class="kpi-label">Fatturato mese</div><div class="kpi-value">${fmtCurrency(incassoMese)}</div></div>
+      <div class="kpi-card"><div class="kpi-label">Incasso totale</div><div class="kpi-value">${fmtCurrency(incassoTot)}</div></div>
+      <div class="kpi-card"><div class="kpi-label">Appuntamenti completati</div><div class="kpi-value">${completate.length}</div></div>
+      <div class="kpi-card"><div class="kpi-label">Scontrino medio</div><div class="kpi-value">${fmtCurrency(scontrino)}</div></div>
+    </div>
+    <div class="stats-grid">
+      <div class="card">
+        <div class="card-header"><div class="card-title">Servizi più richiesti</div></div>
+        <div class="card-body"><div class="chart-bar-wrap">
+          ${servTop.length ? barRows(servTop, maxServ, false, 'var(--accent)') : '<p style="color:var(--muted);font-size:13px">Nessun dato</p>'}
+        </div></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Incasso ultimi 6 mesi</div></div>
+        <div class="card-body"><div class="chart-bar-wrap">
+          ${barRows(Object.entries(mesiMap), maxMese, true, 'var(--green)')}
+        </div></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Incasso per giorno della settimana</div></div>
+        <div class="card-body"><div class="chart-bar-wrap">
+          ${barRows(Object.entries(giorniMap), maxGiorni, true, 'var(--accent)')}
+        </div></div>
+      </div>
+    </div>`;
 }
 
-/* ======================================================
-   MODALE NUOVA PRENOTAZIONE — logica selezione visiva
-   ====================================================== */
-let npCliente = null;
-let npServizio = null;
-let npData    = null;
-let npOra     = null;
-let npCalDate = new Date();
-
-function openNuovaPrenotazione() {
-  /* Reset selezioni */
-  npCliente = null; npServizio = null; npData = null; npOra = null;
-  npCalDate = new Date();
-  document.getElementById('np_note').value = '';
+// =============================================
+// MODAL PRENOTAZIONE
+// =============================================
+async function openNuovaPrenotazione(preselClienteId = null) {
+  editingPrenotazioneId = null;
+  await fetchAll();
+  npCliente  = preselClienteId ? (allClienti.find(c => c.id === preselClienteId) || null) : null;
+  npServizio = null; npData = null; npOra = null;
+  npCalDate  = new Date();
+  document.getElementById('np_note').value  = '';
+  document.getElementById('np_stato').value = 'confermata';
+  document.getElementById('modal-np-title').textContent = 'Nuova prenotazione';
+  document.getElementById('btn-elimina-prenot').style.display = 'none';
+  document.getElementById('btn-conferma-prenot').textContent  = 'Conferma prenotazione';
   buildGrigliaClienti();
   buildGrigliaServizi();
   buildGrigliaOrari();
@@ -861,111 +993,141 @@ function openNuovaPrenotazione() {
   document.getElementById('modalNuovaPrenotazione').classList.add('open');
 }
 
-function chiudiNuovaPrenotazione(e) {
-  if (e.target === document.getElementById('modalNuovaPrenotazione')) closeModal('modalNuovaPrenotazione');
+async function openEditPrenotazione(id) {
+  editingPrenotazioneId = id;
+  await fetchAll();
+  const p = allPrenotazioni.find(x => x.id === id);
+  if (!p) return;
+
+  npCliente  = allClienti.find(c => c.id === p.cliente_id) || null;
+  npServizio = allServizi.find(s => s.id === p.servizio_id) || null;
+  const dt = new Date(p.data_ora);
+  npData    = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate());
+  npCalDate = new Date(dt.getFullYear(), dt.getMonth(), 1);
+  npOra     = `${String(dt.getHours()).padStart(2,'0')}:${String(dt.getMinutes()).padStart(2,'0')}`;
+
+  document.getElementById('np_note').value  = p.note || '';
+  document.getElementById('np_stato').value = p.stato || 'confermata';
+  document.getElementById('modal-np-title').textContent = 'Modifica prenotazione';
+  document.getElementById('btn-elimina-prenot').style.display = 'inline-flex';
+  document.getElementById('btn-conferma-prenot').textContent  = 'Aggiorna';
+
+  buildGrigliaClienti();
+  buildGrigliaServizi();
+  buildGrigliaOrari();
+  buildNpCalendario();
+
+  document.getElementById('info-cliente').textContent = npCliente ? `${npCliente.cognome} ${npCliente.nome}` : 'Nessun cliente selezionato';
+  document.getElementById('info-servizio').textContent = npServizio ? `${npServizio.nome} — ${fmtCurrency(npServizio.prezzo)}` : 'Nessun servizio selezionato';
+  document.getElementById('info-data').textContent = npData ? npData.toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long'}) : 'Nessuna data selezionata';
+  document.getElementById('info-ora').textContent = npOra || 'Nessun orario selezionato';
+
+  aggiornaSummary();
+  document.getElementById('modalNuovaPrenotazione').classList.add('open');
 }
 
-/* Griglia clienti */
+async function openNuovaPrenotazionePer(clienteId) {
+  await openNuovaPrenotazione(clienteId);
+}
+
 function buildGrigliaClienti() {
   const grid = document.getElementById('grid-clienti');
-  grid.innerHTML = clientiData.map((c, i) => `
-    <div class="sel-chip" id="chip-c-${i}" onclick="selCliente(${i})">
-      <div class="chip-main">${c.nome}</div>
-      <div class="chip-sub">${c.servizio}</div>
-    </div>
-  `).join('');
+  if (!allClienti.length) { grid.innerHTML = '<p style="color:var(--muted);font-size:13px">Nessun cliente. Aggiungine uno prima.</p>'; return; }
+  grid.innerHTML = allClienti.map((c, i) => {
+    const sel = npCliente && c.id === npCliente.id;
+    return `<div class="sel-chip${sel?' selected':''}" id="chip-c-${i}" onclick="selCliente('${c.id}',${i})">
+      <div class="chip-main">${c.cognome} ${c.nome}</div>
+      <div class="chip-sub">${c.telefono || c.email || '—'}</div>
+    </div>`;
+  }).join('');
 }
 
-function selCliente(i) {
-  npCliente = clientiData[i];
-  document.querySelectorAll('[id^="chip-c-"]').forEach(el => el.classList.remove('selected'));
-  document.getElementById('chip-c-' + i).classList.add('selected');
-  document.getElementById('info-cliente').textContent = npCliente.nome;
+function selCliente(id, i) {
+  npCliente = allClienti.find(c => c.id === id) || null;
+  document.querySelectorAll('[id^="chip-c-"]').forEach(e => e.classList.remove('selected'));
+  document.getElementById('chip-c-'+i)?.classList.add('selected');
+  document.getElementById('info-cliente').textContent = npCliente ? `${npCliente.cognome} ${npCliente.nome}` : 'Nessun cliente selezionato';
   aggiornaSummary();
 }
 
-/* Griglia servizi */
 function buildGrigliaServizi() {
   const grid = document.getElementById('grid-servizi');
-  grid.innerHTML = serviziData.map((s, i) => `
-    <div class="sel-chip" id="chip-s-${i}" onclick="selServizio(${i})">
+  if (!allServizi.length) { grid.innerHTML = '<p style="color:var(--muted);font-size:13px">Nessun servizio disponibile.</p>'; return; }
+  grid.innerHTML = allServizi.map((s, i) => {
+    const sel = npServizio && s.id === npServizio.id;
+    return `<div class="sel-chip${sel?' selected':''}" id="chip-s-${i}" onclick="selServizio('${s.id}',${i})">
       <div class="chip-main">${s.nome}</div>
-      <div class="chip-sub">${s.durata} — ${s.prezzo}</div>
-    </div>
-  `).join('');
+      <div class="chip-sub">${s.durata_minuti} min — ${fmtCurrency(s.prezzo)}</div>
+    </div>`;
+  }).join('');
 }
 
-function selServizio(i) {
-  npServizio = serviziData[i];
-  document.querySelectorAll('[id^="chip-s-"]').forEach(el => el.classList.remove('selected'));
-  document.getElementById('chip-s-' + i).classList.add('selected');
-  document.getElementById('info-servizio').textContent = `${npServizio.nome} — ${npServizio.prezzo}`;
+function selServizio(id, i) {
+  npServizio = allServizi.find(s => s.id === id) || null;
+  document.querySelectorAll('[id^="chip-s-"]').forEach(e => e.classList.remove('selected'));
+  document.getElementById('chip-s-'+i)?.classList.add('selected');
+  document.getElementById('info-servizio').textContent = npServizio ? `${npServizio.nome} — ${fmtCurrency(npServizio.prezzo)}` : 'Nessun servizio selezionato';
   aggiornaSummary();
 }
 
-/* Griglia orari */
 function buildGrigliaOrari() {
   const grid = document.getElementById('grid-orari');
-  grid.innerHTML = orariDisponibili.map((o, i) => `
-    <div class="time-chip" id="chip-o-${i}" onclick="selOra('${o}', ${i})">${o}</div>
-  `).join('');
+  grid.innerHTML = ORARI.map((o, i) => {
+    const sel = npOra === o;
+    return `<div class="time-chip${sel?' selected':''}" id="chip-o-${i}" onclick="selOra('${o}',${i})">${o}</div>`;
+  }).join('');
 }
 
 function selOra(ora, i) {
   npOra = ora;
-  document.querySelectorAll('[id^="chip-o-"]').forEach(el => el.classList.remove('selected'));
-  document.getElementById('chip-o-' + i).classList.add('selected');
+  document.querySelectorAll('[id^="chip-o-"]').forEach(e => e.classList.remove('selected'));
+  document.getElementById('chip-o-'+i)?.classList.add('selected');
   document.getElementById('info-ora').textContent = ora;
   aggiornaSummary();
 }
 
-/* Calendario modale */
-const MESI = ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
-const GIORNI_SHORT = ['Lu','Ma','Me','Gi','Ve','Sa','Do'];
-
 function buildNpCalendario() {
   const today = new Date(); today.setHours(0,0,0,0);
   const y = npCalDate.getFullYear(), m = npCalDate.getMonth();
-  const firstDay = new Date(y, m, 1).getDay();
-  const daysInMonth = new Date(y, m + 1, 0).getDate();
+  const firstDay    = new Date(y, m, 1).getDay();
+  const daysInMonth = new Date(y, m+1, 0).getDate();
+  const startEmpty  = firstDay === 0 ? 6 : firstDay - 1;
   document.getElementById('np-cal-month').textContent = `${MESI[m]} ${y}`;
   let html = GIORNI_SHORT.map(d => `<div class="np-cal-dh">${d}</div>`).join('');
-  const startEmpty = firstDay === 0 ? 6 : firstDay - 1;
   for (let i = 0; i < startEmpty; i++) html += `<div class="np-cal-d other"></div>`;
   for (let d = 1; d <= daysInMonth; d++) {
-    const date = new Date(y, m, d);
-    const isPast = date < today;
-    const isToday = date.getTime() === today.getTime();
-    const isSel = npData && date.getTime() === npData.getTime();
+    const date = new Date(y, m, d); date.setHours(0,0,0,0);
+    const isPast   = date < today;
+    const isToday  = date.getTime() === today.getTime();
+    const isSel    = npData && date.getTime() === npData.getTime();
+    const canClick = !isPast || editingPrenotazioneId !== null;
     let cls = 'np-cal-d';
-    if (isPast) cls += ' disabled';
+    if (!canClick) cls += ' disabled';
     else if (isSel) cls += ' selected';
     else if (isToday) cls += ' today';
-    const onclick = isPast ? '' : `onclick="selData(${y},${m},${d})"`;
+    const onclick = canClick ? `onclick="selData(${y},${m},${d})"` : '';
     html += `<div class="${cls}" ${onclick}>${d}</div>`;
   }
   document.getElementById('np-cal-grid').innerHTML = html;
 }
 
 function npCalMove(dir) {
-  npCalDate.setMonth(npCalDate.getMonth() + dir);
+  npCalDate = new Date(npCalDate.getFullYear(), npCalDate.getMonth() + dir, 1);
   buildNpCalendario();
 }
 
 function selData(y, m, d) {
-  npData = new Date(y, m, d);
+  npData = new Date(y, m, d); npData.setHours(0,0,0,0);
   buildNpCalendario();
-  const label = npData.toLocaleDateString('it-IT', { weekday:'long', day:'numeric', month:'long' });
-  document.getElementById('info-data').textContent = label;
+  document.getElementById('info-data').textContent = npData.toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long'});
   aggiornaSummary();
 }
 
-/* Summary footer */
 function aggiornaSummary() {
   const parts = [];
-  if (npCliente)  parts.push(npCliente.nome);
+  if (npCliente)  parts.push(`${npCliente.cognome} ${npCliente.nome}`);
   if (npServizio) parts.push(npServizio.nome);
-  if (npData)     parts.push(npData.toLocaleDateString('it-IT', {day:'numeric',month:'short'}));
+  if (npData)     parts.push(npData.toLocaleDateString('it-IT',{day:'numeric',month:'short'}));
   if (npOra)      parts.push(npOra);
   const el = document.getElementById('np-summary');
   if (parts.length === 4) {
@@ -973,65 +1135,118 @@ function aggiornaSummary() {
   } else {
     el.textContent = parts.length === 0
       ? 'Seleziona cliente, servizio, data e orario'
-      : parts.join(' — ') + ' — seleziona ancora ' + (4 - parts.length) + ' elemento/i';
+      : parts.join(' — ') + ` — seleziona ancora ${4-parts.length} elemento/i`;
   }
 }
 
-/* Salva prenotazione */
-function salvaPrenotazione() {
+async function salvaPrenotazione() {
   if (!npCliente)  { showToast('Seleziona un cliente',  'error'); return; }
   if (!npServizio) { showToast('Seleziona un servizio', 'error'); return; }
   if (!npData)     { showToast('Seleziona una data',    'error'); return; }
   if (!npOra)      { showToast('Seleziona un orario',   'error'); return; }
-  const dataFmt = npData.toLocaleDateString('it-IT', { day:'numeric', month:'long', year:'numeric' });
+
+  const [hh, mm] = npOra.split(':').map(Number);
+  const dataOra  = new Date(npData); dataOra.setHours(hh, mm, 0, 0);
+
+  const payload = {
+    cliente_id:     npCliente.id,
+    servizio_id:    npServizio.id,
+    data_ora:       dataOra.toISOString(),
+    durata_minuti:  npServizio.durata_minuti,
+    prezzo:         npServizio.prezzo,
+    stato:          document.getElementById('np_stato').value,
+    note:           document.getElementById('np_note').value.trim() || null,
+  };
+
+  let err;
+  if (editingPrenotazioneId) {
+    ({ error: err } = await supabase.from('prenotazioni').update(payload).eq('id', editingPrenotazioneId));
+  } else {
+    ({ error: err } = await supabase.from('prenotazioni').insert([payload]));
+  }
+
+  if (err) { showToast('Errore: ' + err.message, 'error'); return; }
+  showToast(editingPrenotazioneId ? 'Prenotazione aggiornata' : 'Prenotazione confermata!');
   closeModal('modalNuovaPrenotazione');
-  showToast(`Prenotazione confermata: ${npCliente.nome} — ${npServizio.nome} — ${dataFmt} alle ${npOra}`, 'success');
+  renderPage(currentPage);
 }
 
-/* ---- MODALE CLIENTE ---- */
-function openModal(id) {
-  document.getElementById(id).classList.add('open');
+async function eliminaPrenotazioneDaModal() {
+  if (!editingPrenotazioneId) return;
+  if (!confirm('Eliminare questa prenotazione?')) return;
+  const { error } = await supabase.from('prenotazioni').delete().eq('id', editingPrenotazioneId);
+  if (error) { showToast('Errore: ' + error.message, 'error'); return; }
+  showToast('Prenotazione eliminata');
+  closeModal('modalNuovaPrenotazione');
+  renderPage(currentPage);
 }
+
+// =============================================
+// MODAL CLIENTE
+// =============================================
+function openNuovoCliente() {
+  editingClienteId = null;
+  document.getElementById('modal-cliente-titolo').textContent = 'Nuovo cliente';
+  ['nc_nome','nc_cognome','nc_tel','nc_email','nc_note'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('modalNuovoCliente').classList.add('open');
+}
+
+function openEditCliente(id) {
+  editingClienteId = id;
+  const c = allClienti.find(x => x.id === id);
+  document.getElementById('modal-cliente-titolo').textContent = 'Modifica cliente';
+  document.getElementById('nc_nome').value    = c?.nome     || '';
+  document.getElementById('nc_cognome').value = c?.cognome  || '';
+  document.getElementById('nc_tel').value     = c?.telefono || '';
+  document.getElementById('nc_email').value   = c?.email    || '';
+  document.getElementById('nc_note').value    = c?.note     || '';
+  document.getElementById('modalNuovoCliente').classList.add('open');
+}
+
+async function salvaCliente() {
+  const nome    = document.getElementById('nc_nome').value.trim();
+  const cognome = document.getElementById('nc_cognome').value.trim();
+  if (!nome || !cognome) { showToast('Inserisci nome e cognome', 'error'); return; }
+
+  const payload = {
+    nome, cognome,
+    telefono: document.getElementById('nc_tel').value.trim()   || null,
+    email:    document.getElementById('nc_email').value.trim() || null,
+    note:     document.getElementById('nc_note').value.trim()  || null,
+  };
+
+  let err;
+  if (editingClienteId) {
+    ({ error: err } = await supabase.from('clienti').update(payload).eq('id', editingClienteId));
+  } else {
+    ({ error: err } = await supabase.from('clienti').insert([payload]));
+  }
+
+  if (err) { showToast('Errore: ' + err.message, 'error'); return; }
+  showToast(editingClienteId ? 'Cliente aggiornato' : `Cliente ${nome} ${cognome} aggiunto`);
+  closeModal('modalNuovoCliente');
+  renderPage(currentPage);
+}
+
+async function deleteCliente(id) {
+  if (!confirm('Eliminare questo cliente? Le prenotazioni associate resteranno invariate.')) return;
+  const { error } = await supabase.from('clienti').delete().eq('id', id);
+  if (error) { showToast('Errore: ' + error.message, 'error'); return; }
+  showToast('Cliente eliminato');
+  renderPage(currentPage);
+}
+
 function closeModal(id) {
   document.getElementById(id).classList.remove('open');
 }
 
-function salvaCliente() {
-  const nome = document.getElementById('nc_nome').value.trim();
-  const cognome = document.getElementById('nc_cognome').value.trim();
-  if (!nome || !cognome) { showToast('Inserisci nome e cognome', 'error'); return; }
-  const nuovo = {
-    nome: `${nome} ${cognome}`, tel: document.getElementById('nc_tel').value || '—',
-    servizio: document.getElementById('nc_servizio').value,
-    ultima: 'Oggi', spesa: '€ 0', tag: 'nuova'
-  };
-  clientiList.unshift(nuovo);
-  renderClienti(clientiList);
-  closeModal('modalNuovoCliente');
-  showToast(`Cliente ${nome} ${cognome} aggiunto`, 'success');
-}
+// =============================================
+// INIT
+// =============================================
+document.getElementById('topbarDate').textContent =
+  new Date().toLocaleDateString('it-IT', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
 
-/* ---- TOAST ---- */
-function showToast(msg, type = 'info') {
-  const cont = document.getElementById('toastContainer');
-  const t = document.createElement('div');
-  t.className = `toast${type==='success'?' success':type==='error'?' error':''}`;
-  t.textContent = msg;
-  cont.appendChild(t);
-  setTimeout(() => {
-    t.style.opacity='0'; t.style.transform='translateX(50px)'; t.style.transition='.3s';
-    setTimeout(()=>t.remove(), 320);
-  }, 3500);
-}
-
-/* ---- INIT ---- */
-aggiornaData();
-renderAgenda();
-renderMiniCal();
-renderProssimi();
-renderWeek();
-renderClienti(clientiList);
-renderStatistiche();
+goTo('dashboard', document.querySelector('.nav-item.active'));
 </script>
 </body>
 </html>
